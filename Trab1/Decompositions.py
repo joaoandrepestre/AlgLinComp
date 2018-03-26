@@ -2,14 +2,15 @@
 
 A = [[1,2,2],[4,4,2],[4,6,4]]
 
+def determinante(matrix):
+    return matrix
+    
 def LU(matrix):
 
     N = len(matrix)
 
     if N != len(matrix[0]):
-
-        print("A matriz deve ser quadrada")
-        return matrix
+        raise ValueError("A matriz deve ser quadrada")
 
     #testar se determinante não nulo
 
@@ -62,3 +63,4 @@ def Cholesky(matrix):
 
     return matrix
 
+LU(A)
