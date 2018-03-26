@@ -1,5 +1,7 @@
 
 
+A = [[1,2,2],[4,4,2],[4,6,4]]
+
 def LU(matrix):
 
     N = len(matrix)
@@ -9,7 +11,9 @@ def LU(matrix):
         print("A matriz deve ser quadrada")
         return matrix
 
-    for k in range(1, N-1):
+    #testar se determinante não nulo
+
+    for k in range(0, N-1):
 
         for i in range(k+1, N):
 
@@ -34,6 +38,7 @@ def Cholesky(matrix):
         print("A matriz deve ser quadrada")
         return matrix
 
+    #testar se determinante não nulo
     #testar se simétrica positiva definida
 
     for i in range(1, N):
