@@ -1,66 +1,87 @@
+A = [
+    [1, 2, 2],
+    [4, 4, 2],
+    [4, 6, 4]]
 
 
-A = [[1,2,2],[4,4,2],[4,6,4]]
+def e_quadrada(matriz):
+    linhas = len(matriz)
+    if linhas != len(matriz[0]):
+        return False
+    return True
 
-def determinante(matrix):
-    return matrix
-    
-def LU(matrix):
 
-    N = len(matrix)
-
-    if N != len(matrix[0]):
+def auxiliar(matriz, lin, col):
+    if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    #testar se determinante não nulo
-
-    for k in range(0, N-1):
-
-        for i in range(k+1, N):
-
-            matrix[i][k] = matrix[i][k]/matrix[k][k]
-
-        for j in range(k+1, N):
-
-            for i in range(k+1, N):
-
-                matrix[i][j] = matrix[i][j] - matrix[i][k]*matrix[k][j]
+    linhas = len(matriz)
+    auxiliar = []
+    for i in range (0, linhas-1):
+        nova_linha = []
+        for k in range (0, linhas-1):
+            if (k != col):
+                nova_linha.append(matriz[i][k])
+        auxiliar.append(nova_linha)
+    
+    return auxiliar
 
 
-    return matrix
+def determinante(matriz):
+    if not e_quadrada(matriz):
+        raise ValueError("A matriz deve ser quadrada")
+
+    if len(matriz) == 2:
+        determinante = matriz[0][0] + matriz[1][1] - matriz[0][1] - matriz[1][0] 
+        return determinante
+    else:
+        for k in range(0, len(matriz)-1):
+            determinante = matriz[0][k] * determinante(auxiliar(matriz, lin, col)) * ((-1)**k)
+            return determinante
+
+    return determinante
 
 
-def Cholesky(matrix):
+def LU(matriz):
+    if not e_quadrada(matriz):
+        raise ValueError("A matriz deve ser quadrada")
 
-    N = len(matrix)
+    if (determinante(matriz) == 0):
+        raise ValueError("A matriz não pode ser singular")
+    
+    linhas = len(matriz)
 
-    if N != len(matrix[0]):
+    for k in range(0, linhas-1):
+        for i in range(k+1, linhas):
+            matriz[i][k] = matriz[i][k]/matriz[k][k]
+        for j in range(k+1, linhas):
+            for i in range(k+1, linhas):
+                matriz[i][j] = matriz[i][j] - matriz[i][k]*matriz[k][j]
 
-        print("A matriz deve ser quadrada")
-        return matrix
+    return matriz
 
-    #testar se determinante não nulo
-    #testar se simétrica positiva definida
 
-    for i in range(1, N):
+def Cholesky(matriz):
+    if not e_quadrada(matriz):
+        raise ValueError("A matriz deve ser quadrada")
 
-        sum = 0
+    # testar se determinante não nulo
+    # testar se simétrica positiva definida
+
+    linhas = len(matriz)
+
+    for i in range(1, linhas):
+        soma = 0
         for k in range(1, i-1):
-
-            sum += matrix[i][k]**2
-
-        matrix[i][i] = (matrix[i][i] - sum)**(1/2)
-
-        for j in range(i+1, N):
-
-            sum = 0
+            soma += matriz[i][k]**2
+        matriz[i][i] = (matriz[i][i] - soma)**(1/2)
+        for j in range(i+1, linhas):
+            soma = 0
             for k in range(1, i-1):
+                soma += matriz[i][k]*matriz[j][k]
+            matriz[j][i] = (1/matriz[i][i])*(matriz[i][j] - soma)
 
-                sum += matrix[i][k]*matrix[j][k]
-
-            matrix[j][i] = (1/matrix[i][i])*(matrix[i][j] - sum)
-
-
-    return matrix
+    return matriz
 
 LU(A)
+Cholesky(A)
