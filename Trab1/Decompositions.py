@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 LU_ex = [
          [1, 2, 2],
          [4, 4, 2],
@@ -10,49 +12,58 @@ Cholesky_ex = [
 
 
 def e_quadrada(matriz):
+    """Retorna true sse a matriz for quadrada"""
+
     linhas = len(matriz)
     if linhas != len(matriz[0]):
         return False
     return True
 
 
-def auxiliar(matriz, lin, col):
+def cofator(matriz, lin, col):
+    """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
+
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
     linhas = len(matriz)
     auxiliar = []
-    for i in range (0, linhas-1):
-        nova_linha = []
-        for k in range (0, linhas-1):
-            if (k != col):
-                nova_linha.append(matriz[i][k])
-        auxiliar.append(nova_linha)
+    for i in range (0, linhas):
+        if (i != lin):
+            nova_linha = []
+            for k in range (0, linhas):
+                if (k != col):
+                    nova_linha.append(matriz[i][k])
+            auxiliar.append(nova_linha)
     
     return auxiliar
 
 
-#def determinante(matriz):
-#    if not e_quadrada(matriz):
-#        raise ValueError("A matriz deve ser quadrada")
-#
-#   if len(matriz) == 2:
-#        determinante = matriz[0][0] + matriz[1][1] - matriz[0][1] - matriz[1][0] 
-#        return determinante
-#    else:
-#        for k in range(0, len(matriz)-1):
-#            determinante = matriz[0][k] * determinante(auxiliar(matriz, lin, col)) * ((-1)**k)
-#            return determinante
-#
-#    return determinante
+def determinante(matriz):
+    """Calcula e retorna o determinante da matriz"""
 
-
-def LU(matriz):
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    #if (determinante(matriz) == 0):
-    #    raise ValueError("A matriz nao pode ser singular")
+    if len(matriz) == 2:
+        det = matriz[0][0]*matriz[1][1] - matriz[0][1]*matriz[1][0] 
+        return det
+    else:
+        for k in range(0, len(matriz)-1):
+            det = matriz[0][k] * determinante(cofator(matriz, k, k)) * ((-1)**k)
+            return det
+
+    return det
+
+
+def LU(matriz):
+    """Realiza a decomposição da matriz em matrizes triangular inferior e superior"""
+
+    if not e_quadrada(matriz):
+        raise ValueError("A matriz deve ser quadrada")
+
+    if (determinante(matriz) == 0):
+        raise ValueError("A matriz nao pode ser singular")
     
     linhas = len(matriz)
 
@@ -88,5 +99,5 @@ def Cholesky(matriz):
 
     return matriz
 
-LU_output = LU(LU_ex)
-Cholesky_output = Cholesky(Cholesky_ex)
+#LU_output = LU(LU_ex)
+#Cholesky_output = Cholesky(Cholesky_ex)
