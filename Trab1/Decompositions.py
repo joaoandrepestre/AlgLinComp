@@ -1,7 +1,12 @@
-A = [
-    [1, 2, 2],
-    [4, 4, 2],
-    [4, 6, 4]]
+LU_ex = [
+         [1, 2, 2],
+         [4, 4, 2],
+         [4, 6, 4]]
+
+Cholesky_ex = [
+               [1,0.2,0.4],
+               [0.2,1,0.5],
+               [0.4,0.5,1]]
 
 
 def e_quadrada(matriz):
@@ -27,27 +32,27 @@ def auxiliar(matriz, lin, col):
     return auxiliar
 
 
-def determinante(matriz):
-    if not e_quadrada(matriz):
-        raise ValueError("A matriz deve ser quadrada")
-
-    if len(matriz) == 2:
-        determinante = matriz[0][0] + matriz[1][1] - matriz[0][1] - matriz[1][0] 
-        return determinante
-    else:
-        for k in range(0, len(matriz)-1):
-            determinante = matriz[0][k] * determinante(auxiliar(matriz, lin, col)) * ((-1)**k)
-            return determinante
-
-    return determinante
+#def determinante(matriz):
+#    if not e_quadrada(matriz):
+#        raise ValueError("A matriz deve ser quadrada")
+#
+#   if len(matriz) == 2:
+#        determinante = matriz[0][0] + matriz[1][1] - matriz[0][1] - matriz[1][0] 
+#        return determinante
+#    else:
+#        for k in range(0, len(matriz)-1):
+#            determinante = matriz[0][k] * determinante(auxiliar(matriz, lin, col)) * ((-1)**k)
+#            return determinante
+#
+#    return determinante
 
 
 def LU(matriz):
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    if (determinante(matriz) == 0):
-        raise ValueError("A matriz não pode ser singular")
+    #if (determinante(matriz) == 0):
+    #    raise ValueError("A matriz nao pode ser singular")
     
     linhas = len(matriz)
 
@@ -65,8 +70,8 @@ def Cholesky(matriz):
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    # testar se determinante não nulo
-    # testar se simétrica positiva definida
+    # testar se determinante nao nulo
+    # testar se simetrica positiva definida
 
     linhas = len(matriz)
 
@@ -83,5 +88,5 @@ def Cholesky(matriz):
 
     return matriz
 
-LU(A)
-Cholesky(A)
+LU_output = LU(LU_ex)
+Cholesky_output = Cholesky(Cholesky_ex)
