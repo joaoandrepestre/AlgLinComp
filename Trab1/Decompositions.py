@@ -88,17 +88,20 @@ def LU(matriz):
     
     linhas = len(matriz)
 
+    ret = [[matriz[lin][col] for col in range(linhas)] for lin in range(linhas)]
     for k in range (0, linhas-1):
         for i in range (k+1, linhas):
-            matriz[i][k] = matriz[i][k]/matriz[k][k]
+            ret[i][k] = ret[i][k]/ret[k][k]
         for j in range (k+1, linhas):
             for i in range (k+1, linhas):
-                matriz[i][j] = matriz[i][j] - matriz[i][k]*matriz[k][j]
+                ret[i][j] = ret[i][j] - ret[i][k]*ret[k][j]
 
-    return matriz
+    return ret
 
 
-def Cholesky(matriz): #por algum motivo essa função não está mudando a matriz em nada
+def Cholesky(matriz):#agora parece funcionar com erros de aproximação
+    """Realiza a decomposição da matriz em uma matriz triangular inferior e sua transposta"""
+
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
@@ -113,18 +116,19 @@ def Cholesky(matriz): #por algum motivo essa função não está mudando a matri
 
     linhas = len(matriz)
 
-    for i in range (0, linhas):
+    ret = [[0 for col in range(linhas)] for lin in range(linhas)]
+    for col in range (linhas):
         soma = 0
-        for k in range (0, i-1):
-            soma += matriz[i][k]**2
-        matriz[i][i] = (matriz[i][i] - soma)**(1/2)
-        for j in range (i+1, linhas):
+        for k in range (col):
+            soma += ret[col][k]**2
+        ret[col][col] = (matriz[col][col] - soma)**(1/2)
+        for lin in range (col+1, linhas):
             soma = 0
-            for k in range (0, i-1):
-                soma += matriz[i][k]*matriz[j][k]
-            matriz[j][i] = (1/matriz[i][i])*(matriz[i][j] - soma)
+            for k in range (col):
+                soma += ret[col][k]*ret[lin][k]
+            ret[lin][col] = (matriz[col][lin] - soma)/ret[col][col] 
 
-    return matriz
+    return ret
 
-#LU_output = LU(LU_ex)
-#Cholesky_output = Cholesky(Cholesky_ex)
+LU_output = LU(LU_ex)
+Cholesky_output = Cholesky(Cholesky_ex)
