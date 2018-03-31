@@ -10,6 +10,11 @@ Cholesky_ex = [
                [0.2,1,0.5],
                [0.4,0.5,1]]
 
+Cholesky_ex2 = [
+               [4,12,-16],
+               [12,37,-43],
+               [-16,-43,98]]
+
 
 def e_quadrada(matriz):
     """Retorna true sse a matriz for quadrada"""
@@ -121,7 +126,7 @@ def Cholesky(matriz):#agora parece funcionar com erros de aproximação
         soma = 0
         for k in range (col):
             soma += ret[col][k]**2
-        ret[col][col] = (matriz[col][col] - soma)**(1/2)
+        ret[col][col] = (matriz[col][col] - soma)**0.5
         for lin in range (col+1, linhas):
             soma = 0
             for k in range (col):
