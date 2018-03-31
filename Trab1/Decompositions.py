@@ -19,6 +19,15 @@ def e_quadrada(matriz):
         return False
     return True
 
+def e_simetrica(matriz):
+    """Retorna true sse a matriz for simetrica"""
+
+    for i in range (0,len(matriz)):
+        for j in range (0,len(matriz)):
+            if (matriz[i][j] != matriz[j][i]):
+                return False
+    return True
+
 
 def cofator(matriz, lin, col):
     """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
@@ -55,6 +64,20 @@ def determinante(matriz):
 
     return det
 
+def e_positiva_definida(matriz):
+    """Retorna true sse a matriz for positiva definida"""
+
+    linhas = len(matriz)
+
+    if linhas == 1:
+        if matriz[0][0] > 0:
+            return True
+
+    if (determinante(matriz) > 0) and e_positiva_definida(cofator(matriz,linhas-1,linhas-1)):
+        return True
+    
+    return False
+
 
 def LU(matriz):
     """Realiza a decomposição da matriz em matrizes triangular inferior e superior"""
@@ -63,7 +86,7 @@ def LU(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
     if (determinante(matriz) == 0):
-        raise ValueError("A matriz nao pode ser singular")
+        raise ValueError("A matriz não pode ser singular")
     
     linhas = len(matriz)
 
@@ -81,8 +104,14 @@ def Cholesky(matriz):
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    # testar se determinante nao nulo
-    # testar se simetrica positiva definida
+    if (determinante(matriz) == 0):
+        raise ValueError("A matriz não pode ser singular")
+
+    if not e_simetrica(matriz):
+        raise ValueError("A matriz deve ser simétrica")
+
+    if not e_positiva_definida(matriz):
+        raise ValueError("A matriz deve ser positiva definida")
 
     linhas = len(matriz)
 
