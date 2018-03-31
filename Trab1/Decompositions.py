@@ -29,7 +29,7 @@ def e_simetrica(matriz):
     return True
 
 
-def cofator(matriz, lin, col):
+def auxiliar(matriz, lin, col):
     """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
 
     if not e_quadrada(matriz):
@@ -54,14 +54,13 @@ def determinante(matriz):
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
-    if len(matriz) == 2:
-        det = matriz[0][0]*matriz[1][1] - matriz[0][1]*matriz[1][0] 
-        return det
-    else:
-        for k in range(0, len(matriz)-1):
-            det = matriz[0][k] * determinante(cofator(matriz, k, k)) * ((-1)**k)
-            return det
-
+    if len(matriz) == 1: 
+        return matriz[0][0]
+    
+    det  = 0
+    for k in range (0, len(matriz)):
+        det += matriz[0][k] * determinante(auxiliar(matriz, 0, k)) * ((-1)**(k))
+    
     return det
 
 def e_positiva_definida(matriz):
@@ -70,10 +69,9 @@ def e_positiva_definida(matriz):
     linhas = len(matriz)
 
     if linhas == 1:
-        if matriz[0][0] > 0:
-            return True
+        return matriz[0][0]>0
 
-    if (determinante(matriz) > 0) and e_positiva_definida(cofator(matriz,linhas-1,linhas-1)):
+    if (determinante(matriz) > 0) and e_positiva_definida(auxiliar(matriz,linhas-1,linhas-1)):
         return True
     
     return False
@@ -90,17 +88,17 @@ def LU(matriz):
     
     linhas = len(matriz)
 
-    for k in range(0, linhas-1):
-        for i in range(k+1, linhas):
+    for k in range (0, linhas-1):
+        for i in range (k+1, linhas):
             matriz[i][k] = matriz[i][k]/matriz[k][k]
-        for j in range(k+1, linhas):
-            for i in range(k+1, linhas):
+        for j in range (k+1, linhas):
+            for i in range (k+1, linhas):
                 matriz[i][j] = matriz[i][j] - matriz[i][k]*matriz[k][j]
 
     return matriz
 
 
-def Cholesky(matriz):
+def Cholesky(matriz): #por algum motivo essa função não está mudando a matriz em nada
     if not e_quadrada(matriz):
         raise ValueError("A matriz deve ser quadrada")
 
@@ -115,14 +113,14 @@ def Cholesky(matriz):
 
     linhas = len(matriz)
 
-    for i in range(1, linhas):
+    for i in range (0, linhas):
         soma = 0
-        for k in range(1, i-1):
+        for k in range (0, i-1):
             soma += matriz[i][k]**2
         matriz[i][i] = (matriz[i][i] - soma)**(1/2)
-        for j in range(i+1, linhas):
+        for j in range (i+1, linhas):
             soma = 0
-            for k in range(1, i-1):
+            for k in range (0, i-1):
                 soma += matriz[i][k]*matriz[j][k]
             matriz[j][i] = (1/matriz[i][i])*(matriz[i][j] - soma)
 
