@@ -99,6 +99,17 @@ class Matriz:
                     resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
             return Matriz(resp)
 
+    def transposta(self):
+        """Retorna a transposta da matriz"""
+
+        resp = [[0 for i in range(self.lin)] for j in range(self.col)]
+        for i in range (self.lin):
+            for j in range(self.col):
+                resp[j][i] = self.mat[i][j]
+
+        return Matriz(resp)
+
+
     
 
 class MatrizQuadrada(Matriz):
@@ -125,15 +136,6 @@ class MatrizQuadrada(Matriz):
         
         resp = Matriz.__sub__(self, outro)
         return MatrizQuadrada(resp.mat)
-
-    def e_simetrica(self):
-        """Retorna true sse a matriz for simetrica."""
-
-        for i in range(self.dim):
-            for j in range(self.dim):
-                if (self.mat[i][j] != self.mat[j][i]):
-                    return False
-        return True
     
     def auxiliar(self, lin, col):
         """Retorna uma cópia da matriz removendo a linha lin e a coluna col."""
@@ -160,6 +162,15 @@ class MatrizQuadrada(Matriz):
             det += ((-1)**(k)) * self.mat[0][k] * self.auxiliar(0,k).determinante()
         
         return det
+
+    def e_simetrica(self):
+        """Retorna true sse a matriz for simetrica."""
+
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if (self.mat[i][j] != self.mat[j][i]):
+                    return False
+        return True
     
     def e_positiva_definida(self):
         """Retorna true sse a matriz for positiva definida."""
@@ -171,7 +182,31 @@ class MatrizQuadrada(Matriz):
             return True
         
         return False
-    
+
+    def e_triangular_inferior(self):
+        """Retorna true sse a matriz for triangular inferior"""
+
+        for i in range (self.dim):
+            for j in range (i+1,self.dim):
+                if self.mat[i][j] != 0:
+                    return False
+        return True
+
+    def e_triangular_superior(self):
+        """Retorna true sse a matriz for triangular superior"""
+
+        for j in range (self.dim):
+            for i in range (j+1, self.dim):
+                if self.mat[i][j] != 0:
+                    return False
+        return True
+
+    def transposta(self):
+        """Retorna a transposta da matriz"""
+
+        resp = Matriz.transposta(self)
+        return MatrizQuadrada(resp.mat)
+
     def LU(self):
         """Realiza a decomposição da matriz em matrizes triangular inferior e superior."""
 
@@ -187,7 +222,6 @@ class MatrizQuadrada(Matriz):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
 
         return MatrizQuadrada(resp)
-
 
     def Cholesky(self):
         """Realiza a decomposição da matriz em uma matriz triangular inferior e sua transposta."""
@@ -215,19 +249,62 @@ class MatrizQuadrada(Matriz):
 
         return MatrizQuadrada(resp)
 
+    def substituicao_para_frente(self, vetor):
+        """Realiza a substituição para frente no sistema com a matriz e o vetor e retorna a solução"""
+
+        if (len(vetor) != self.dim):
+            raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
+
+        if not self.e_triangular_inferior():
+            raise ValueError("A matriz deve ser triangular inferior")
+
+        resp = [0 for i in range (self.dim)]
+        resp[0] = float(vetor[0]/self.mat[0][0])
+        for i in range (1,self.dim):
+            soma = 0
+            for j in range (i):
+                soma += self.mat[i][j]*resp[j]
+            resp[i] = float((vetor[i] - soma)/self.mat[i][i])
+
+        return resp
+
+    def retro_substituicao(self, vetor):#algo não está correto
+        if (len(vetor) != self.dim):
+            raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
+
+        if not self.e_triangular_superior():
+            raise ValueError("A matriz deve ser triangular inferior")
+
+        resp = [0 for i in range (self.dim)]
+        resp[self.dim-1] = float(vetor[self.dim-1]/self.mat[self.dim-1][self.dim-1])
+        for i in range (self.dim-1,0):
+            soma = 0
+            for j in range (i+1,self.dim):
+                soma += self.mat[i][j]*resp[j]
+            resp[i] = float((vetor[i] - soma)/self.mat[i][i])
+
+        return resp
+
 
 LU_ex = MatrizQuadrada([[1, 2, 2],
-                          [4, 4, 2],
-                          [4, 6, 4]])
+                        [4, 4, 2],
+                        [4, 6, 4]])
 
 Cholesky_ex = MatrizQuadrada([[1,0.2,0.4],
                               [0.2,1,0.5],
                               [0.4,0.5,1]])
 
-print(LU_ex.LU())
+LU_output = LU_ex.LU()
+Cholesky_output = Cholesky_ex.Cholesky()
 
-print(Cholesky_ex.Cholesky())
-
+print "LU_ex:"
 print(LU_ex)
+print "LU_output:"
+print(LU_output)
+
+print "Cholesky_ex:"
 print(Cholesky_ex)
+print "Cholesky_output:"
+print(Cholesky_output)
+
 print('fim do programa')
