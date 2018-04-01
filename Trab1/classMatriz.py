@@ -63,6 +63,7 @@ class Matriz:
                 for j in range(self.col):
                     resp[i].append(self.mat[i][j] * outro)
             return Matriz(resp)
+
         elif isinstance(outro, Matriz):
             if (self.col != outro.linha):
                 raise ValueError("Matrizes de tamanho incompatível para multiplicação")
@@ -80,15 +81,37 @@ class MatrizQuadrada(Matriz):
         Matriz.__init__(self, mat)
         self.dim = self.col
 
+    def e_simetrica(self):
+        """Retorna true sse a matriz for simetrica"""
 
-exemplo = Matriz([[1, 2, 2],
-                [4, 4, 2],
-                [4, 6, 4]])
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if (self.mat[i][j] != self.mat[j][i]):
+                    return False
+        return True
+    
+    def auxiliar(self, lin, col):
+        """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
 
-exemplo2 = Matriz([[1, 2, 2],
-                [4, 4, 2],
-                [1, 6, 4]])
-print(exemplo * exemplo2)
+        auxiliar = []
+        for i in range(self.dim):
+            if (i != lin):
+                nova_linha = []
+                for k in range(self.dim):
+                    if (k != col):
+                        nova_linha.append(self.mat[i][k])
+                auxiliar.append(nova_linha)
+        
+        return MatrizQuadrada(auxiliar)
+
+    
+
+
+exemplo = MatrizQuadrada([[1, 2, 2],
+                          [2, 5, 2],
+                          [2, 2, 1]])
+
+print(exemplo.auxiliar(1,2))
 
 print(exemplo)
 print('fim do programa')
