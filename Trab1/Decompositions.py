@@ -184,7 +184,7 @@ class MatrizQuadrada(Matriz):
         return False
 
     def e_triangular_inferior(self):
-        """Retorna true sse a matriz for triangular inferior"""
+        """Retorna true sse a matriz for triangular inferior."""
 
         for i in range (self.dim):
             for j in range (i+1,self.dim):
@@ -193,7 +193,7 @@ class MatrizQuadrada(Matriz):
         return True
 
     def e_triangular_superior(self):
-        """Retorna true sse a matriz for triangular superior"""
+        """Retorna true sse a matriz for triangular superior."""
 
         for j in range (self.dim):
             for i in range (j+1, self.dim):
@@ -202,13 +202,14 @@ class MatrizQuadrada(Matriz):
         return True
 
     def transposta(self):
-        """Retorna a transposta da matriz"""
+        """Retorna a transposta da matriz."""
 
         resp = Matriz.transposta(self)
         return MatrizQuadrada(resp.mat)
 
     def LU(self):
-        """Realiza a decomposição da matriz em matrizes triangular inferior e superior."""
+        """Realiza a decomposição da matriz em matrizes
+         triangular inferior e superior."""
 
         if self.determinante() == 0:
             raise ValueError("A matriz não pode ser singular.")
@@ -224,7 +225,8 @@ class MatrizQuadrada(Matriz):
         return MatrizQuadrada(resp)
 
     def Cholesky(self):
-        """Realiza a decomposição da matriz em uma matriz triangular inferior e sua transposta."""
+        """Realiza a decomposição da matriz em uma matriz
+         triangular inferior e sua transposta."""
 
         if (self.determinante() == 0):
             raise ValueError("A matriz não pode ser singular.")
@@ -250,7 +252,8 @@ class MatrizQuadrada(Matriz):
         return MatrizQuadrada(resp)
 
     def substituicao_para_frente(self, vetor):
-        """Realiza a substituição para frente no sistema com a matriz e o vetor e retorna a solução"""
+        """Realiza a substituição para frente no sistema 
+        com a matriz e o vetor e retorna o vetor solução."""
 
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
@@ -268,7 +271,10 @@ class MatrizQuadrada(Matriz):
 
         return resp
 
-    def retro_substituicao(self, vetor):#algo não está correto
+    def retro_substituicao(self, vetor):
+        """Realiza retro-substituição no sistema
+         com a matriz e o vetor e retorna o vetor solução."""
+
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
 
@@ -277,7 +283,7 @@ class MatrizQuadrada(Matriz):
 
         resp = [0 for i in range (self.dim)]
         resp[self.dim-1] = float(vetor[self.dim-1]/self.mat[self.dim-1][self.dim-1])
-        for i in range (self.dim-1,0):
+        for i in range (self.dim-2,-1,-1):
             soma = 0
             for j in range (i+1,self.dim):
                 soma += self.mat[i][j]*resp[j]
@@ -296,6 +302,8 @@ Cholesky_ex = MatrizQuadrada([[1,0.2,0.4],
 
 LU_output = LU_ex.LU()
 Cholesky_output = Cholesky_ex.Cholesky()
+
+vetor = [0.6,-0.3,-0.6]
 
 print "LU_ex:"
 print(LU_ex)
