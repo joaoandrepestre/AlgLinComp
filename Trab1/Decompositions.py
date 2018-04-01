@@ -43,7 +43,7 @@ class Matriz:
             for j in range(self.col):
                 resp[i].append(self.mat[i][j] + outro.mat[i][j])
         
-        return Matriz(resp)
+        return cria_matriz(resp)
 
     def __sub__(self, outro):
         """Retorna a diferença das matrizes elemento a elemento."""
@@ -57,7 +57,7 @@ class Matriz:
             for j in range(self.col):
                 resp[i].append(self.mat[i][j] - outro.mat[i][j])
         
-        return Matriz(resp)
+        return cria_matriz(resp)
     
     def getLinha(self, linha):
         """Retorna a linha desejada como uma lista."""
@@ -86,7 +86,7 @@ class Matriz:
                 resp.append([])
                 for j in range(self.col):
                     resp[i].append(self.mat[i][j] * outro)
-            return Matriz(resp)
+            return cria_matriz(resp)
 
         elif isinstance(outro, Matriz):
             if (self.col != outro.linha):
@@ -97,7 +97,7 @@ class Matriz:
                 resp.append([])
                 for j in range(self.col):
                     resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
-            return Matriz(resp)
+            return cria_matriz(resp)
 
     def transposta(self):
         """Retorna a transposta da matriz"""
@@ -107,15 +107,13 @@ class Matriz:
             for j in range(self.col):
                 resp[j][i] = self.mat[i][j]
 
-        return Matriz(resp)
+        return cria_matriz(resp)
 
-
-    
 
 class MatrizQuadrada(Matriz):
     """Implementação especial da estrutura de dados matriz para matrizes quadradas."""
 
-    def __init__(self, mat):
+    def __init__(self, mat, simetrica=False, triang_inf=False, triang_sup=False):
         """Construtor da classe MatrizQuadrada."""
 
         Matriz.__init__(self, mat)
@@ -124,18 +122,21 @@ class MatrizQuadrada(Matriz):
             raise ValueError("A matriz não é quadrada.") 
         
         self.dim = self.col
+        self.sim = simetrica
+        self.tinf = triang_inf
+        self.tsup = triang_sup
 
     def __add__(self, outro):
         """Retorna a soma das matrizes elemento a elemento."""
 
         resp = Matriz.__add__(self, outro)
-        return MatrizQuadrada(resp.mat)
+        return cria_matriz(resp.mat)
 
     def __sub__(self, outro):
         """Retorna a soma das matrizes elemento a elemento."""
         
         resp = Matriz.__sub__(self, outro)
-        return MatrizQuadrada(resp.mat)
+        return cria_matriz(resp.mat)
     
     def auxiliar(self, lin, col):
         """Retorna uma cópia da matriz removendo a linha lin e a coluna col."""
@@ -149,7 +150,7 @@ class MatrizQuadrada(Matriz):
                         nova_linha.append(self.mat[i][j])
                 auxiliar.append(nova_linha)
         
-        return MatrizQuadrada(auxiliar)
+        return cria_matriz(auxiliar)
 
     def determinante(self):
         """Calcula e retorna o determinante da matriz."""
@@ -162,15 +163,6 @@ class MatrizQuadrada(Matriz):
             det += ((-1)**(k)) * self.mat[0][k] * self.auxiliar(0,k).determinante()
         
         return det
-
-    def e_simetrica(self):
-        """Retorna true sse a matriz for simetrica."""
-
-        for i in range(self.dim):
-            for j in range(self.dim):
-                if (self.mat[i][j] != self.mat[j][i]):
-                    return False
-        return True
     
     def e_positiva_definida(self):
         """Retorna true sse a matriz for positiva definida."""
@@ -183,29 +175,11 @@ class MatrizQuadrada(Matriz):
         
         return False
 
-    def e_triangular_inferior(self):
-        """Retorna true sse a matriz for triangular inferior."""
-
-        for i in range (self.dim):
-            for j in range (i+1,self.dim):
-                if self.mat[i][j] != 0:
-                    return False
-        return True
-
-    def e_triangular_superior(self):
-        """Retorna true sse a matriz for triangular superior."""
-
-        for j in range (self.dim):
-            for i in range (j+1, self.dim):
-                if self.mat[i][j] != 0:
-                    return False
-        return True
-
     def transposta(self):
         """Retorna a transposta da matriz."""
 
         resp = Matriz.transposta(self)
-        return MatrizQuadrada(resp.mat)
+        return MatrizQuadrada(resp.mat,self.sim,self.tsup,self.tinf)
 
     def LU(self):
         """Realiza a decomposição da matriz em matrizes
@@ -222,7 +196,7 @@ class MatrizQuadrada(Matriz):
                 for i in range (k+1, self.dim):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
 
-        return MatrizQuadrada(resp)
+        return cria_matriz(resp)
 
     def Cholesky(self):
         """Realiza a decomposição da matriz em uma matriz
@@ -231,7 +205,7 @@ class MatrizQuadrada(Matriz):
         if (self.determinante() == 0):
             raise ValueError("A matriz não pode ser singular.")
 
-        if not self.e_simetrica():
+        if not self.sim:
             raise ValueError("A matriz deve ser simétrica.")
 
         if not self.e_positiva_definida():
@@ -249,7 +223,7 @@ class MatrizQuadrada(Matriz):
                     soma += resp[col][k]*resp[lin][k]
                 resp[lin][col] = float((self.mat[col][lin] - soma)/resp[col][col]) 
 
-        return MatrizQuadrada(resp)
+        return cria_matriz(resp)
 
     def substituicao_para_frente(self, vetor):
         """Realiza a substituição para frente no sistema 
@@ -258,7 +232,7 @@ class MatrizQuadrada(Matriz):
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
 
-        if not self.e_triangular_inferior():
+        if not self.tinf:
             raise ValueError("A matriz deve ser triangular inferior")
 
         resp = [0 for i in range (self.dim)]
@@ -278,7 +252,7 @@ class MatrizQuadrada(Matriz):
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
 
-        if not self.e_triangular_superior():
+        if not self.tsup():
             raise ValueError("A matriz deve ser triangular inferior")
 
         resp = [0 for i in range (self.dim)]
@@ -291,14 +265,61 @@ class MatrizQuadrada(Matriz):
 
         return resp
 
+def e_quadrada(mat):
+    """Retorna true sse mat for quadrada."""
+    return len(mat)==len(mat[0])
 
-LU_ex = MatrizQuadrada([[1, 2, 2],
-                        [4, 4, 2],
-                        [4, 6, 4]])
+def e_simetrica(mat):
+    """Retorna true sse mat for simétrica."""
 
-Cholesky_ex = MatrizQuadrada([[1,0.2,0.4],
-                              [0.2,1,0.5],
-                              [0.4,0.5,1]])
+    for i in range(len(mat)):
+        for j in range(len(mat[0])):
+            if (mat[i][j] != mat[j][i]):
+                return False
+    return True
+
+def e_triangular_inferior(mat):
+    """Retorna true sse mat for triangular inferior."""
+
+    for i in range (len(mat)):
+        for j in range(i+1,len(mat[0])):
+            if mat[i][j] != 0:
+                return False
+    return True
+
+def e_triangular_superior(mat):
+    """Retorna true sse a matriz for triangular superior."""
+
+    for j in range (len(mat)):
+        for i in range (j+1, len(mat)):
+            if mat[i][j] != 0:
+                return False
+    return True
+
+def cria_matriz(mat):
+    """Avalia mat e cria a matriz adequada às suas características."""
+
+    if e_quadrada(mat):
+        
+        if e_simetrica(mat):
+            return MatrizQuadrada(mat,simetrica=True)
+        if e_triangular_inferior(mat):
+            return MatrizQuadrada(mat,triang_inf=True)
+        if e_triangular_superior(mat):
+            return MatrizQuadrada(mat, triang_sup=True)
+
+        return MatrizQuadrada(mat)    
+    
+    else:
+        return Matriz(mat)
+
+LU_ex = cria_matriz([[1, 2, 2],
+                     [4, 4, 2],
+                     [4, 6, 4]])
+
+Cholesky_ex = cria_matriz([[1,0.2,0.4],
+                           [0.2,1,0.5],
+                           [0.4,0.5,1]])
 
 LU_output = LU_ex.LU()
 Cholesky_output = Cholesky_ex.Cholesky()
