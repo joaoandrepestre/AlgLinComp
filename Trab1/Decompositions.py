@@ -1,139 +1,186 @@
 # -*- coding: utf-8 -*-
 
-LU_ex = [
-         [1, 2, 2],
-         [4, 4, 2],
-         [4, 6, 4]]
+class Matriz:
+    def __init__(self, mat):
+        if not isinstance(mat, list):
+            raise TypeError("Não é lista") 
+        
+        for i in mat:
+            if len(i) != len(mat[0]):
+                raise ValueError("Lista de listas não configura matriz (tamanho de linhas variável)")
+        
+        self.mat = mat
+        self.col = len(mat[0])
+        self.lin = len(mat)
 
-Cholesky_ex = [
-               [1,0.2,0.4],
-               [0.2,1,0.5],
-               [0.4,0.5,1]]
-
-Cholesky_ex2 = [
-               [4,12,-16],
-               [12,37,-43],
-               [-16,-43,98]]
-
-
-def e_quadrada(matriz):
-    """Retorna true sse a matriz for quadrada"""
-
-    linhas = len(matriz)
-    if linhas != len(matriz[0]):
-        return False
-    return True
-
-def e_simetrica(matriz):
-    """Retorna true sse a matriz for simetrica"""
-
-    for i in range (0,len(matriz)):
-        for j in range (0,len(matriz)):
-            if (matriz[i][j] != matriz[j][i]):
-                return False
-    return True
-
-
-def auxiliar(matriz, lin, col):
-    """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
-
-    if not e_quadrada(matriz):
-        raise ValueError("A matriz deve ser quadrada")
-
-    linhas = len(matriz)
-    auxiliar = []
-    for i in range (0, linhas):
-        if (i != lin):
-            nova_linha = []
-            for k in range (0, linhas):
-                if (k != col):
-                    nova_linha.append(matriz[i][k])
-            auxiliar.append(nova_linha)
+    def __repr__(self):
+        for i in range(self.lin):
+            for j in range(self.col):
+                print(str(self.mat[i][j]), end=' ')
+            print()
+        return ('')
     
-    return auxiliar
+    def __add__(self, outro):
+        if (self.col != outro.col) or (self.lin != outro.lin):
+            raise Exception("Matrizes devem ter as mesmas linhas e colunas")
+        
+        resp = []
+        for i in range(self.lin):
+            resp.append([])
+            for j in range(self.col):
+                resp[i].append(self.mat[i][j] + outro.mat[i][j])
+        
+        return Matriz(resp)
 
-
-def determinante(matriz):
-    """Calcula e retorna o determinante da matriz"""
-
-    if not e_quadrada(matriz):
-        raise ValueError("A matriz deve ser quadrada")
-
-    if len(matriz) == 1: 
-        return matriz[0][0]
+    def __sub__(self, outro):
+        if (self.col != outro.col) or (self.lin != outro.lin):
+            raise Exception("Matrizes devem ter as mesmas linhas e colunas")
+        
+        resp = []
+        for i in range(self.lin):
+            resp.append([])
+            for j in range(self.col):
+                resp[i].append(self.mat[i][j] - outro.mat[i][j])
+        
+        return Matriz(resp)
     
-    det  = 0
-    for k in range (0, len(matriz)):
-        det += matriz[0][k] * determinante(auxiliar(matriz, 0, k)) * ((-1)**(k))
+    def getLinha(self, linha):
+        if (linha > self.lin):
+            raise IndexError("A matriz não tem a linha desejada")
+        return self.mat[linha]
     
-    return det
+    def getColuna(self, coluna):
+        if (coluna > self.col):
+            raise IndexError("A matriz não tem a coluna desejada")
+        resp = []
+        for i in range(self.lin):
+            resp.append(self.mat[i][coluna])
+        return resp
 
-def e_positiva_definida(matriz):
-    """Retorna true sse a matriz for positiva definida"""
+    def __mul__(self, outro):
+        if isinstance(outro, int):
+            resp = []
+            for i in range(self.lin):
+                resp.append([])
+                for j in range(self.col):
+                    resp[i].append(self.mat[i][j] * outro)
+            return Matriz(resp)
 
-    linhas = len(matriz)
+        elif isinstance(outro, Matriz):
+            if (self.col != outro.linha):
+                raise ValueError("Matrizes de tamanho incompatível para multiplicação")
+            
+            resp = []
+            for i in range(self.lin):
+                resp.append([])
+                for j in range(self.col):
+                    resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
+            return Matriz(resp)
 
-    if linhas == 1:
-        return matriz[0][0]>0
+    
 
-    if (determinante(matriz) > 0) and e_positiva_definida(auxiliar(matriz,linhas-1,linhas-1)):
+class MatrizQuadrada(Matriz):
+    def __init__(self, mat):
+        Matriz.__init__(self, mat)
+        self.dim = self.col
+
+    def e_simetrica(self):
+        """Retorna true sse a matriz for simetrica"""
+
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if (self.mat[i][j] != self.mat[j][i]):
+                    return False
         return True
     
-    return False
+    def auxiliar(self, lin, col):
+        """Retorna uma cópia da matriz removendo a linha lin e a coluna col"""
 
+        auxiliar = []
+        for i in range(self.dim):
+            if (i != lin):
+                nova_linha = []
+                for k in range(self.dim):
+                    if (k != col):
+                        nova_linha.append(self.mat[i][k])
+                auxiliar.append(nova_linha)
+        
+        return MatrizQuadrada(auxiliar)
 
-def LU(matriz):
-    """Realiza a decomposição da matriz em matrizes triangular inferior e superior"""
+    def determinante(self):
+        """Calcula e retorna o determinante da matriz"""
 
-    if not e_quadrada(matriz):
-        raise ValueError("A matriz deve ser quadrada")
-
-    if (determinante(matriz) == 0):
-        raise ValueError("A matriz não pode ser singular")
+        if self.dim == 1: 
+            return self.mat[0][0]
+        
+        det = 0
+        for k in range(0, self.dim):
+            det += ((-1)**(k)) * self.mat[0][k] * self.auxiliar(0,k).determinante()
+        
+        return det
     
-    linhas = len(matriz)
+    def e_positiva_definida(self):
+        # Não testada
+        """Retorna true sse a matriz for positiva definida"""
 
-    ret = [[matriz[lin][col] for col in range(linhas)] for lin in range(linhas)]
-    for k in range (0, linhas-1):
-        for i in range (k+1, linhas):
-            ret[i][k] = ret[i][k]/ret[k][k]
-        for j in range (k+1, linhas):
-            for i in range (k+1, linhas):
-                ret[i][j] = ret[i][j] - ret[i][k]*ret[k][j]
+        if self.dim == 1:
+            return self.mat[0][0]>0
 
-    return ret
+        if (self.determinante() > 0) and self.auxiliar(self.dim-1,self.dim-1).e_positiva_definida():
+            return True
+        
+        return False
+    
+    def LU(self):
+        """Realiza a decomposição da matriz em matrizes triangular inferior e superior"""
+
+        if self.determinante() == 0:
+            raise ValueError("A matriz não pode ser singular")
+        
+        ret = [[self.mat[lin][col] for col in range(self.dim)] for lin in range(self.dim)]
+        for k in range (0, self.dim-1):
+            for i in range (k+1, self.dim):
+                ret[i][k] = ret[i][k]/ret[k][k]
+            for j in range (k+1, self.dim):
+                for i in range (k+1, self.dim):
+                    ret[i][j] = ret[i][j] - ret[i][k]*ret[k][j]
+
+        return MatrizQuadrada(ret)
 
 
-def Cholesky(matriz):#agora parece funcionar com erros de aproximação
-    """Realiza a decomposição da matriz em uma matriz triangular inferior e sua transposta"""
+    def Cholesky(self):#agora parece funcionar com erros de aproximação
+        # Falta testes como OO
+        """Realiza a decomposição da matriz em uma matriz triangular inferior e sua transposta"""
 
-    if not e_quadrada(matriz):
-        raise ValueError("A matriz deve ser quadrada")
+        if (self.determinante() == 0):
+            raise ValueError("A matriz não pode ser singular")
 
-    if (determinante(matriz) == 0):
-        raise ValueError("A matriz não pode ser singular")
+        if not self.e_simetrica():
+            raise ValueError("A matriz deve ser simétrica")
 
-    if not e_simetrica(matriz):
-        raise ValueError("A matriz deve ser simétrica")
+        if not self.e_positiva_definida():
+            raise ValueError("A matriz deve ser positiva definida")
 
-    if not e_positiva_definida(matriz):
-        raise ValueError("A matriz deve ser positiva definida")
-
-    linhas = len(matriz)
-
-    ret = [[0 for col in range(linhas)] for lin in range(linhas)]
-    for col in range (linhas):
-        soma = 0
-        for k in range (col):
-            soma += ret[col][k]**2
-        ret[col][col] = (matriz[col][col] - soma)**0.5
-        for lin in range (col+1, linhas):
+        ret = [[0 for col in range(self.dim)] for lin in range(self.dim)]
+        for col in range (self.dim):
             soma = 0
             for k in range (col):
-                soma += ret[col][k]*ret[lin][k]
-            ret[lin][col] = (matriz[col][lin] - soma)/ret[col][col] 
+                soma += ret[col][k]**2
+            ret[col][col] = (self.mat[col][col] - soma)**0.5
+            for lin in range (col+1, self.dim):
+                soma = 0
+                for k in range (col):
+                    soma += ret[col][k]*ret[lin][k]
+                ret[lin][col] = (self.mat[col][lin] - soma)/ret[col][col] 
 
-    return ret
+        return ret
 
-LU_output = LU(LU_ex)
-Cholesky_output = Cholesky(Cholesky_ex)
+
+exemplo = MatrizQuadrada([[1, 2, 2],
+                          [2, 5, 2],
+                          [2, 2, 1]])
+
+print(exemplo.LU())
+
+print(exemplo)
+print('fim do programa')
