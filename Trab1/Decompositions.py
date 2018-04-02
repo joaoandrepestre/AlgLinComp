@@ -118,9 +118,6 @@ class MatrizQuadrada(Matriz):
 
         Matriz.__init__(self, mat)
         
-        if self.col != self.lin:
-            raise ValueError("A matriz não é quadrada.") 
-        
         self.dim = self.col
         self.sim = simetrica
         self.tinf = triang_inf
@@ -181,7 +178,7 @@ class MatrizQuadrada(Matriz):
         resp = Matriz.transposta(self)
         return MatrizQuadrada(resp.mat,self.sim,self.tsup,self.tinf)
 
-    def LU(self):
+    def LU(self, separa=False):
         """Realiza a decomposição da matriz em matrizes
          triangular inferior e superior."""
 
@@ -196,9 +193,24 @@ class MatrizQuadrada(Matriz):
                 for i in range (k+1, self.dim):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
 
-        return cria_matriz(resp)
+        if separa:
+            Ltmp = [[0 for j in range(self.dim)] for i in range(self.dim)]
+            for i in range(self.dim):
+                for j in range(i+1):
+                    if i==j:
+                        Ltmp[i][j] = 1
+                    else:
+                        Ltmp[i][j] = resp[i][j]
+            Utmp = [[0 for j in range(self.dim)] for i in range(self.dim)]
+            for i in range(self.dim):
+                for j in range(i,self.dim):
+                    Utmp[i][j] = resp[i][j]
 
-    def Cholesky(self):
+            return (MatrizQuadrada(Ltmp,triang_inf=True),MatrizQuadrada(Utmp,triang_sup=True)) 
+
+        return MatrizQuadrada(resp)
+
+    def Cholesky(self, separa=False):
         """Realiza a decomposição da matriz em uma matriz
          triangular inferior e sua transposta."""
 
@@ -221,9 +233,14 @@ class MatrizQuadrada(Matriz):
                 soma = 0
                 for k in range (col):
                     soma += resp[col][k]*resp[lin][k]
-                resp[lin][col] = float((self.mat[col][lin] - soma)/resp[col][col]) 
+                resp[lin][col] = float((self.mat[col][lin] - soma)/resp[col][col])
 
-        return cria_matriz(resp)
+        L = MatrizQuadrada(resp,triang_inf=True)
+        if separa:
+            U = L.transposta()
+            return (L,U) 
+
+        return L
 
     def substituicao_para_frente(self, vetor):
         """Realiza a substituição para frente no sistema 
@@ -306,7 +323,7 @@ def cria_matriz(mat):
         if e_triangular_inferior(mat):
             return MatrizQuadrada(mat,triang_inf=True)
         if e_triangular_superior(mat):
-            return MatrizQuadrada(mat, triang_sup=True)
+            return MatrizQuadrada(mat,triang_sup=True)
 
         return MatrizQuadrada(mat)    
     
@@ -321,19 +338,23 @@ Cholesky_ex = cria_matriz([[1,0.2,0.4],
                            [0.2,1,0.5],
                            [0.4,0.5,1]])
 
-LU_output = LU_ex.LU()
-Cholesky_output = Cholesky_ex.Cholesky()
+(L,U) = LU_ex.LU(True)
+(Cholesky_L,Cholesky_U) = Cholesky_ex.Cholesky(True)
 
 vetor = [0.6,-0.3,-0.6]
 
 print "LU_ex:"
 print(LU_ex)
-print "LU_output:"
-print(LU_output)
+print "L:"
+print(L)
+print "U:"
+print(U)
 
 print "Cholesky_ex:"
 print(Cholesky_ex)
-print "Cholesky_output:"
-print(Cholesky_output)
+print "Cholesky_L:"
+print(Cholesky_L)
+print "Cholesky_U:"
+print(Cholesky_U)
 
 print('fim do programa')
