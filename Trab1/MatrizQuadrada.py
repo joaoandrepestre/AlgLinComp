@@ -1,114 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import numbers
-
-class Matriz:
-    """Implementação da estrutura de dados matriz."""
-
-    def __init__(self, mat):
-        """Construtor da classe Matriz."""
-
-        if not isinstance(mat, list):
-            raise TypeError("Não é lista.") 
-        
-        for i in mat:
-            if len(i) != len(mat[0]):
-                raise ValueError("Lista de listas não configura matriz (tamanho de linhas variável).")
-        
-        self.mat = mat
-        self.col = len(mat[0])
-        self.lin = len(mat)
-
-    def __repr__(self):
-        """Retorna uma representação em string da matriz."""
-
-        resp = ""
-        for i in range(self.lin):
-            for j in range(self.col):               
-                resp += str(self.mat[i][j])
-                if j < self.lin-1:
-                    resp += " "
-            resp += "\n"
-        return resp
-    
-    def __add__(self, outro):
-        """Retorna a soma das matrizes elemento a elemento."""
-
-        if (self.col != outro.col) or (self.lin != outro.lin):
-            raise Exception("Matrizes devem ter as mesmas dimensões.")
-        
-        resp = []
-        for i in range(self.lin):
-            resp.append([])
-            for j in range(self.col):
-                resp[i].append(self.mat[i][j] + outro.mat[i][j])
-        
-        return cria_matriz(resp)
-
-    def __sub__(self, outro):
-        """Retorna a diferença das matrizes elemento a elemento."""
-
-        if (self.col != outro.col) or (self.lin != outro.lin):
-            raise Exception("Matrizes devem ter as mesmas dimensões.")
-        
-        resp = []
-        for i in range(self.lin):
-            resp.append([])
-            for j in range(self.col):
-                resp[i].append(self.mat[i][j] - outro.mat[i][j])
-        
-        return cria_matriz(resp)
-    
-    def getLinha(self, linha):
-        """Retorna a linha desejada como uma lista."""
-
-        if (linha > self.lin):
-            raise IndexError("A matriz não tem a linha desejada.")
-        return self.mat[linha]
-    
-    def getColuna(self, coluna):
-        """Retorna a coluna desejada como uma lista."""
-
-        if (coluna > self.col):
-            raise IndexError("A matriz não tem a coluna desejada.")
-        resp = []
-        for i in range(self.lin):
-            resp.append(self.mat[i][coluna])
-        return resp
-
-    def __mul__(self, outro):
-        """Se outro for numero, retorna o produto de cada elemento da matriz por outro.
-           Se outro ofr matriz, retorna o produto matricial das matrizes."""
-
-        if isinstance(outro, numbers.Number):
-            resp = []
-            for i in range(self.lin):
-                resp.append([])
-                for j in range(self.col):
-                    resp[i].append(self.mat[i][j] * outro)
-            return cria_matriz(resp)
-
-        elif isinstance(outro, Matriz):
-            if (self.col != outro.linha):
-                raise ValueError("Matrizes de tamanho incompatível para multiplicação.")
-            
-            resp = []
-            for i in range(self.lin):
-                resp.append([])
-                for j in range(self.col):
-                    resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
-            return cria_matriz(resp)
-
-    def transposta(self):
-        """Retorna a transposta da matriz"""
-
-        resp = [[0 for i in range(self.lin)] for j in range(self.col)]
-        for i in range (self.lin):
-            for j in range(self.col):
-                resp[j][i] = self.mat[i][j]
-
-        return cria_matriz(resp)
-
+from Matriz import Matriz
 
 class MatrizQuadrada(Matriz):
     """Implementação especial da estrutura de dados matriz para matrizes quadradas."""
@@ -127,13 +19,13 @@ class MatrizQuadrada(Matriz):
         """Retorna a soma das matrizes elemento a elemento."""
 
         resp = Matriz.__add__(self, outro)
-        return cria_matriz(resp.mat)
+        return MatrizQuadrada(resp.mat)
 
     def __sub__(self, outro):
         """Retorna a soma das matrizes elemento a elemento."""
         
         resp = Matriz.__sub__(self, outro)
-        return cria_matriz(resp.mat)
+        return MatrizQuadrada(resp.mat)
     
     def auxiliar(self, lin, col):
         """Retorna uma cópia da matriz removendo a linha lin e a coluna col."""
@@ -147,7 +39,7 @@ class MatrizQuadrada(Matriz):
                         nova_linha.append(self.mat[i][j])
                 auxiliar.append(nova_linha)
         
-        return cria_matriz(auxiliar)
+        return MatrizQuadrada(auxiliar)
 
     def determinante(self):
         """Calcula e retorna o determinante da matriz."""
@@ -282,79 +174,4 @@ class MatrizQuadrada(Matriz):
 
         return resp
 
-def e_quadrada(mat):
-    """Retorna true sse mat for quadrada."""
-    return len(mat)==len(mat[0])
-
-def e_simetrica(mat):
-    """Retorna true sse mat for simétrica."""
-
-    for i in range(len(mat)):
-        for j in range(len(mat[0])):
-            if (mat[i][j] != mat[j][i]):
-                return False
-    return True
-
-def e_triangular_inferior(mat):
-    """Retorna true sse mat for triangular inferior."""
-
-    for i in range (len(mat)):
-        for j in range(i+1,len(mat[0])):
-            if mat[i][j] != 0:
-                return False
-    return True
-
-def e_triangular_superior(mat):
-    """Retorna true sse a matriz for triangular superior."""
-
-    for j in range (len(mat)):
-        for i in range (j+1, len(mat)):
-            if mat[i][j] != 0:
-                return False
-    return True
-
-def cria_matriz(mat):
-    """Avalia mat e cria a matriz adequada às suas características."""
-
-    if e_quadrada(mat):
         
-        if e_simetrica(mat):
-            return MatrizQuadrada(mat,simetrica=True)
-        if e_triangular_inferior(mat):
-            return MatrizQuadrada(mat,triang_inf=True)
-        if e_triangular_superior(mat):
-            return MatrizQuadrada(mat,triang_sup=True)
-
-        return MatrizQuadrada(mat)    
-    
-    else:
-        return Matriz(mat)
-
-LU_ex = cria_matriz([[1, 2, 2],
-                     [4, 4, 2],
-                     [4, 6, 4]])
-
-Cholesky_ex = cria_matriz([[1,0.2,0.4],
-                           [0.2,1,0.5],
-                           [0.4,0.5,1]])
-
-(L,U) = LU_ex.LU(True)
-(Cholesky_L,Cholesky_U) = Cholesky_ex.Cholesky(True)
-
-vetor = [0.6,-0.3,-0.6]
-
-print "LU_ex:"
-print(LU_ex)
-print "L:"
-print(L)
-print "U:"
-print(U)
-
-print "Cholesky_ex:"
-print(Cholesky_ex)
-print "Cholesky_L:"
-print(Cholesky_L)
-print "Cholesky_U:"
-print(Cholesky_U)
-
-print('fim do programa')
