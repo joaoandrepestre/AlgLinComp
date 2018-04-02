@@ -89,14 +89,14 @@ class Matriz:
             return Matriz(resp)
 
         elif isinstance(outro, Matriz):
-            if (self.col != outro.linha):
+            if (self.col != outro.lin):
                 raise ValueError("Matrizes de tamanho incompatível para multiplicação.")
             
             resp = []
             for i in range(self.lin):
                 resp.append([])
                 for j in range(self.col):
-                    resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
+                    resp[i].append(sum([x*y for (x,y) in zip(self.getLinha(i), outro.getColuna(j))]))
             return Matriz(resp)
 
     def transposta(self):

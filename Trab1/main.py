@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from GeradorDeMatriz import cria_matriz
+from Matriz import Matriz
+from MatrizQuadrada import MatrizQuadrada
+from random import random
+
 
 LU_ex = cria_matriz([[1, 2, 2],
                      [4, 4, 2],
                      [4, 6, 4]])
 
-Cholesky_ex = cria_matriz([[1,0.2,0.4],
-                           [0.2,1,0.5],
-                           [0.4,0.5,1]])
+Cholesky_ex = cria_matriz([[5,-4,1,0],
+                           [-4,6,-4,1],
+                           [1,-4,6,-4],
+                           [0,1,-4,5]])
 
 (L,U) = LU_ex.LU(True)
 (Cholesky_L,Cholesky_U) = Cholesky_ex.Cholesky(True)
+print Cholesky_U.col
 
 vetor = [0.6,-0.3,-0.6]
 
@@ -28,5 +34,7 @@ print "Cholesky_L:"
 print(Cholesky_L)
 print "Cholesky_U:"
 print(Cholesky_U)
+print "Prova Real:"
+print(Cholesky_L*Cholesky_U)
 
 print('fim do programa')
