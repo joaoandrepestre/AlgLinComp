@@ -89,14 +89,14 @@ class Matriz:
             return cria_matriz(resp)
 
         elif isinstance(outro, Matriz):
-            if (self.col != outro.linha):
+            if (self.col != outro.lin):
                 raise ValueError("Matrizes de tamanho incompatível para multiplicação.")
             
             resp = []
             for i in range(self.lin):
                 resp.append([])
                 for j in range(self.col):
-                    resp[i].append(sum([i*j for (i, j) in zip(self.getLinha(i), outro.getColuna(j))]))
+                    resp[i].append(sum([x*y for (x,y) in zip(self.getLinha(i), outro.getColuna(j))]))
             return cria_matriz(resp)
 
     def transposta(self):
@@ -343,18 +343,18 @@ Cholesky_ex = cria_matriz([[1,0.2,0.4],
 
 vetor = [0.6,-0.3,-0.6]
 
-print "LU_ex:"
+print("LU_ex:")
 print(LU_ex)
-print "L:"
+print("L:")
 print(L)
-print "U:"
+print("U:")
 print(U)
 
-print "Cholesky_ex:"
+print("Cholesky_ex:")
 print(Cholesky_ex)
-print "Cholesky_L:"
+print("Cholesky_L:")
 print(Cholesky_L)
-print "Cholesky_U:"
+print("Cholesky_U:")
 print(Cholesky_U)
 
 print('fim do programa')
