@@ -74,31 +74,30 @@ class MatrizQuadrada(Matriz):
         """Realiza a decomposição da matriz em matrizes
          triangular inferior e superior."""
 
-        if self.determinante() == 0:
-            raise ValueError("A matriz não pode ser singular.")
+        #if self.determinante() == 0:
+        #    raise ValueError("A matriz não pode ser singular.")
         
         resp = [[self.mat[lin][col] for col in range(self.dim)] for lin in range(self.dim)]
         for k in range (self.dim-1):
             for i in range (k+1, self.dim):
-                resp[i][k] = float(resp[i][k]/resp[k][k])
+                resp[i][k] = float(resp[i][k])/float(resp[k][k])
             for j in range (k+1, self.dim):
                 for i in range (k+1, self.dim):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
 
         if separa:
-            Ltmp = [[0 for j in range(self.dim)] for i in range(self.dim)]
+            Ltmp = [[resp[i][j] for j in range(self.dim)] for i in range(self.dim)]
             for i in range(self.dim):
-                for j in range(i+1):
+                for j in range(i,self.dim):
                     if i==j:
                         Ltmp[i][j] = 1
                     else:
-                        Ltmp[i][j] = resp[i][j]
-            Utmp = [[0 for j in range(self.dim)] for i in range(self.dim)]
+                        Ltmp[i][j] = 0
             for i in range(self.dim):
-                for j in range(i,self.dim):
-                    Utmp[i][j] = resp[i][j]
+                for j in range(i):
+                    resp[i][j] = 0
 
-            return (MatrizQuadrada(Ltmp,triang_inf=True),MatrizQuadrada(Utmp,triang_sup=True)) 
+            return (MatrizQuadrada(Ltmp,triang_inf=True),MatrizQuadrada(resp,triang_sup=True)) 
 
         return MatrizQuadrada(resp)
 
@@ -106,14 +105,14 @@ class MatrizQuadrada(Matriz):
         """Realiza a decomposição da matriz em uma matriz
          triangular inferior e sua transposta."""
 
-        if (self.determinante() == 0):
-            raise ValueError("A matriz não pode ser singular.")
+        #if (self.determinante() == 0):
+        #    raise ValueError("A matriz não pode ser singular.")
 
         if not self.sim:
             raise ValueError("A matriz deve ser simétrica.")
 
-        if not self.e_positiva_definida():
-            raise ValueError("A matriz deve ser positiva definida.")
+        #if not self.e_positiva_definida():
+        #    raise ValueError("A matriz deve ser positiva definida.")
 
         resp = [[0 for col in range(self.dim)] for lin in range(self.dim)]
         for col in range (self.dim):
@@ -125,7 +124,7 @@ class MatrizQuadrada(Matriz):
                 soma = 0
                 for k in range (col):
                     soma += resp[col][k]*resp[lin][k]
-                resp[lin][col] = float((self.mat[col][lin] - soma)/resp[col][col])
+                resp[lin][col] = float((self.mat[col][lin] - soma))/float(resp[col][col])
 
         L = MatrizQuadrada(resp,triang_inf=True)
         if separa:
@@ -161,7 +160,7 @@ class MatrizQuadrada(Matriz):
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
 
-        if not self.tsup():
+        if not self.tsup:
             raise ValueError("A matriz deve ser triangular inferior")
 
         resp = [0 for i in range (self.dim)]

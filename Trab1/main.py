@@ -3,7 +3,6 @@
 from GeradorDeMatriz import cria_matriz
 from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
-from random import random
 
 
 LU_ex = cria_matriz([[1, 2, 2],
@@ -15,26 +14,26 @@ Cholesky_ex = cria_matriz([[5,-4,1,0],
                            [1,-4,6,-4],
                            [0,1,-4,5]])
 
-(L,U) = LU_ex.LU(True)
-(Cholesky_L,Cholesky_U) = Cholesky_ex.Cholesky(True)
-print Cholesky_U.col
+A = cria_matriz([[16,9,8,7,6,5,4,3,2,1],
+                 [9,17,9,8,7,6,5,4,3,2],
+                 [8,9,18,9,8,7,6,5,4,3],
+                 [7,8,9,19,9,8,7,6,5,4],
+                 [6,7,8,9,18,9,8,7,6,5],
+                 [5,6,7,8,9,17,9,8,7,6],
+                 [4,5,6,7,8,9,16,9,8,7],
+                 [3,4,5,6,7,8,9,15,9,8],
+                 [2,3,4,5,6,7,8,9,14,9],
+                 [1,2,3,4,5,6,7,8,9,13]])
 
-vetor = [0.6,-0.3,-0.6]
+B = [4,0,8,0,12,0,8,0,4,0]
 
-print "LU_ex:"
-print(LU_ex)
-print "L:"
-print(L)
-print "U:"
-print(U)
-
-print "Cholesky_ex:"
-print(Cholesky_ex)
-print "Cholesky_L:"
-print(Cholesky_L)
-print "Cholesky_U:"
-print(Cholesky_U)
-print "Prova Real:"
-print(Cholesky_L*Cholesky_U)
+(L,U) = A.LU(True)
+print("A:\n"+str(A))
+print("L:\n"+str(L))
+print("U:\n"+str(U))
+print("Prova Real:\n"+str(L*U))
+y = L.substituicao_para_frente(B)
+x = U.retro_substituicao(y)
+print("Solução: " + str(x))
 
 print('fim do programa')
