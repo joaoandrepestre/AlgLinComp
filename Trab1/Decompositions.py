@@ -188,7 +188,7 @@ class MatrizQuadrada(Matriz):
         resp = [[self.mat[lin][col] for col in range(self.dim)] for lin in range(self.dim)]
         for k in range (self.dim-1):
             for i in range (k+1, self.dim):
-                resp[i][k] = float(resp[i][k]/resp[k][k])
+                resp[i][k] = float(resp[i][k])/float(resp[k][k])
             for j in range (k+1, self.dim):
                 for i in range (k+1, self.dim):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
@@ -233,7 +233,7 @@ class MatrizQuadrada(Matriz):
                 soma = 0
                 for k in range (col):
                     soma += resp[col][k]*resp[lin][k]
-                resp[lin][col] = float((self.mat[col][lin] - soma)/resp[col][col])
+                resp[lin][col] = float((self.mat[col][lin] - soma))/float(resp[col][col])
 
         L = MatrizQuadrada(resp,triang_inf=True)
         if separa:
@@ -269,7 +269,7 @@ class MatrizQuadrada(Matriz):
         if (len(vetor) != self.dim):
             raise Exception("A matriz e o vetor devem ter as mesmas dimensões")
 
-        if not self.tsup():
+        if not self.tsup:
             raise ValueError("A matriz deve ser triangular inferior")
 
         resp = [0 for i in range (self.dim)]
