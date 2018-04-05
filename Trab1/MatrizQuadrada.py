@@ -41,7 +41,7 @@ class MatrizQuadrada(Matriz):
         
         return MatrizQuadrada(auxiliar)
 
-    def determinante(self):
+    def determinante_rigido(self):
         """Calcula e retorna o determinante da matriz."""
 
         if self.dim == 1: 
@@ -52,6 +52,16 @@ class MatrizQuadrada(Matriz):
             det += ((-1)**(k)) * self.mat[0][k] * self.auxiliar(0,k).determinante()
         
         return det
+
+    def determinante(self):
+        """Calcula e retorna uma aproximação do determinante da matriz"""
+        U = self.LU()
+        det = 1
+        for i in range(self.dim):
+            det *= U.mat[i][i]
+        if abs(det) <= 10**(-10):
+            return 0
+        return det  
     
     def e_positiva_definida(self):
         """Retorna true sse a matriz for positiva definida."""
@@ -73,9 +83,6 @@ class MatrizQuadrada(Matriz):
     def LU(self, separa=False):
         """Realiza a decomposição da matriz em matrizes
          triangular inferior e superior."""
-
-        #if self.determinante() == 0:
-        #    raise ValueError("A matriz não pode ser singular.")
         
         resp = [[self.mat[lin][col] for col in range(self.dim)] for lin in range(self.dim)]
         for k in range (self.dim-1):
@@ -84,6 +91,13 @@ class MatrizQuadrada(Matriz):
             for j in range (k+1, self.dim):
                 for i in range (k+1, self.dim):
                     resp[i][j] = resp[i][j] - resp[i][k]*resp[k][j]
+
+        det = 1
+        for i in range(self.dim):
+            det *= resp[i][i]
+
+        if abs(det) <= 10**(-10):
+            raise ValueError("A matriz não pode ser singular")
 
         if separa:
             Ltmp = [[resp[i][j] for j in range(self.dim)] for i in range(self.dim)]
@@ -105,14 +119,14 @@ class MatrizQuadrada(Matriz):
         """Realiza a decomposição da matriz em uma matriz
          triangular inferior e sua transposta."""
 
-        #if (self.determinante() == 0):
-        #    raise ValueError("A matriz não pode ser singular.")
+        if (self.determinante() == 0):
+            raise ValueError("A matriz não pode ser singular.")
 
         if not self.sim:
             raise ValueError("A matriz deve ser simétrica.")
 
-        #if not self.e_positiva_definida():
-        #    raise ValueError("A matriz deve ser positiva definida.")
+        if not self.e_positiva_definida():
+            raise ValueError("A matriz deve ser positiva definida.")
 
         resp = [[0 for col in range(self.dim)] for lin in range(self.dim)]
         for col in range (self.dim):
