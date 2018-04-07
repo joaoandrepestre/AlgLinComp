@@ -103,13 +103,10 @@ class MatrizQuadrada(Matriz):
             Ltmp = [[resp[i][j] for j in range(self.dim)] for i in range(self.dim)]
             for i in range(self.dim):
                 for j in range(i,self.dim):
-                    if i==j:
-                        Ltmp[i][j] = 1
-                    else:
-                        Ltmp[i][j] = 0
+                    Ltmp[i][j] = float(i==j)
             for i in range(self.dim):
                 for j in range(i):
-                    resp[i][j] = 0
+                    resp[i][j] = 0.0
 
             return (MatrizQuadrada(Ltmp,triang_inf=True),MatrizQuadrada(resp,triang_sup=True)) 
 
@@ -128,7 +125,7 @@ class MatrizQuadrada(Matriz):
         if not self.e_positiva_definida():
             raise ValueError("A matriz deve ser positiva definida.")
 
-        resp = [[0 for col in range(self.dim)] for lin in range(self.dim)]
+        resp = [[0.0 for col in range(self.dim)] for lin in range(self.dim)]
         for col in range (self.dim):
             soma = 0
             for k in range (col):
