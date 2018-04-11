@@ -99,6 +99,17 @@ class Matriz:
                     resp[i].append(sum([x*y for (x,y) in zip(self.getLinha(i), outro.getColuna(j))]))
             return Matriz(resp)
 
+        elif isinstance(outro, list):
+            if(self.col != len(outro)):
+                raise ValueError("Matriz e vetor de tamanho incompatível para multiplicação.")
+
+            resp = []
+            for i in range(self.lin):
+                resp.append(0)
+                for j in range(self.col):
+                    resp[i] += self.mat[i][j]*outro[j]
+            return resp 
+
     def transposta(self):
         """Retorna a transposta da matriz"""
 
