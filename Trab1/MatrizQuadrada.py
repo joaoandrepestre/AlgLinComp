@@ -144,6 +144,22 @@ class MatrizQuadrada(Matriz):
 
         return L
 
+    def metodo_de_potencias(self):
+        """Calcula o maior autovalor(em valor absoluto)
+        do problema e o correspondente autovetor."""
+        autovetor = [1.0 for i in range(self.dim)]
+        autovalor = 1
+        erro = 1
+        while erro > 10**(-3):
+            tmp_vetor = self*autovetor
+            tmp_valor = tmp_vetor[0]
+            erro = float(abs(tmp_valor-autovalor))/float(abs(tmp_valor))
+            autovetor = [float(tmp_vetor[i])/float(tmp_vetor[0]) for i in range(self.dim)]
+            autovalor = tmp_valor
+        return (autovalor,autovetor)
+
+
+
     def substituicao_para_frente(self, vetor):
         """Realiza a substituição para frente no sistema 
         com a matriz e o vetor e retorna o vetor solução."""

@@ -36,4 +36,11 @@ y = L.substituicao_para_frente(B)
 x = U.retro_substituicao(y)
 print("Solução: " + str(x))
 
+A = cria_matriz([[1.0,0.2,0.0],
+                 [0.2,1.0,0.5],
+                 [0.0,0.5,1.0]])
+
+(a,v) = A.metodo_de_potencias()
+print("Autovalor: "+str(a)+"\nAutovetor: "+str(v))
+
 print('fim do programa')
