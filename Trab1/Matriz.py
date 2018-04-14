@@ -98,7 +98,7 @@ class Matriz:
             resp = []
             for i in range(self.lin):
                 resp.append([])
-                for j in range(self.col):
+                for j in range(outro.col):
                     resp[i].append(
                         sum([x*y for (x, y) in zip(self.getLinha(i), outro.getColuna(j))]))
             return Matriz(resp)
