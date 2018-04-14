@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 from Matriz import Matriz
 
 
@@ -157,7 +158,7 @@ class MatrizQuadrada(Matriz):
         autovalor = 1
 
         erro = 1
-        while erro > 10**(-3):
+        while erro > 10**(-10):
             tmp_vetor = self*autovetor
             tmp_valor = tmp_vetor[0]
             erro = float(abs(tmp_valor-autovalor))/float(abs(tmp_valor))
@@ -166,6 +167,39 @@ class MatrizQuadrada(Matriz):
             autovalor = tmp_valor
 
         return (autovalor, autovetor)
+
+    def Jacobi(self):
+        """Calcula a matriz X de autovetores ortogonais."""
+
+        if not self.sim:
+            raise ValueError("A matriz deve ser simétrica.")
+        
+        A = MatrizQuadrada([[self.mat[x][y] for y in range(self.dim)] for x in range(self.dim)],self.sim,self.tinf,self.tsup)
+        X = MatrizQuadrada([[float(x==y) for y in range(self.dim)]for x in range(self.dim)],simetrica=True)
+        
+        (i,j) = A.maior_elemento_fora_diagonal(True)
+        erro = A.mat[i][j]
+        while erro > 10**(-3):
+            aii = A.mat[i][i]
+            ajj = A.mat[j][j]
+            aij = A.mat[i][j]
+            phi = math.pi/4.0
+            if aii != ajj: phi = 0.5*math.atan2(2*aij,aii-aij)
+            P = [[float(x==y) for y in range(self.dim)] for x in range(self.dim)]
+            cos = math.cos(phi)
+            sin = math.sin(phi)
+            P[i][i] = cos
+            P[i][j] = sin
+            P[j][i] = -sin
+            P[j][j] = cos
+            P = MatrizQuadrada(P)
+            Pt = P.transposta()
+            A = Pt*A*P
+            X = X*P
+            (i,j) = A.maior_elemento_fora_diagonal(True)
+            erro = abs(A.mat[i][j])
+
+        return (A,X)
 
     def substituicao_para_frente(self, vetor):
         """Realiza a substituição para frente no sistema 
