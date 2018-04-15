@@ -173,19 +173,23 @@ class MatrizQuadrada(Matriz):
 
         if not self.sim:
             raise ValueError("A matriz deve ser simétrica.")
-        
-        A = MatrizQuadrada([[self.mat[x][y] for y in range(self.dim)] for x in range(self.dim)],self.sim,self.tinf,self.tsup)
-        X = MatrizQuadrada([[float(x==y) for y in range(self.dim)]for x in range(self.dim)],simetrica=True)
-        
-        (i,j) = A.maior_elemento_fora_diagonal(True)
+
+        A = MatrizQuadrada([[self.mat[x][y] for y in range(self.dim)]
+                            for x in range(self.dim)], self.sim, self.tinf, self.tsup)
+        X = MatrizQuadrada([[float(x == y) for y in range(self.dim)]
+                            for x in range(self.dim)], simetrica=True)
+
+        (i, j) = A.maior_elemento_fora_diagonal(True)
         erro = A.mat[i][j]
         while erro > 10**(-3):
             aii = A.mat[i][i]
             ajj = A.mat[j][j]
             aij = A.mat[i][j]
             phi = math.pi/4.0
-            if aii != ajj: phi = 0.5*math.atan2(2*aij,aii-aij)
-            P = [[float(x==y) for y in range(self.dim)] for x in range(self.dim)]
+            if aii != ajj:
+                phi = 0.5*math.atan2(2*aij, aii-aij)
+            P = [[float(x == y) for y in range(self.dim)]
+                 for x in range(self.dim)]
             cos = math.cos(phi)
             sin = math.sin(phi)
             P[i][i] = cos
@@ -196,10 +200,10 @@ class MatrizQuadrada(Matriz):
             Pt = P.transposta()
             A = Pt*A*P
             X = X*P
-            (i,j) = A.maior_elemento_fora_diagonal(True)
+            (i, j) = A.maior_elemento_fora_diagonal(True)
             erro = abs(A.mat[i][j])
 
-        return (A,X)
+        return (A, X)
 
     def substituicao_para_frente(self, vetor):
         """Realiza a substituição para frente no sistema 

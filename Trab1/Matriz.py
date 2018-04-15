@@ -125,7 +125,7 @@ class Matriz:
 
         return Matriz(resp)
 
-    def maior_elemento_fora_diagonal(self,index=False):
+    def maior_elemento_fora_diagonal(self, index=False):
         """Retorna o maior elemento fora da diagonal
         principal da matriz, ou seus índices."""
 
@@ -137,10 +137,10 @@ class Matriz:
                 if i != j:
                     if abs(self.mat[i][j]) > maior:
                         maior = abs(self.mat[i][j])
-                        maior_i=i
-                        maior_j=j
+                        maior_i = i
+                        maior_j = j
 
         if(index):
-            return (maior_i,maior_j)
+            return (maior_i, maior_j)
 
         return maior
