@@ -80,13 +80,17 @@ A = cria_matriz([[1.0, 0.2, 0.0],
 
 (a, v) = A.Jacobi()
 print("\nAutovalor:\n"+str(a)+"Autovetor:\n"+str(v)) """
+
+
 def f1(x):
     return 1
+
 
 def f2(x):
     return x
 
-reta = minimos_quadrados([f1,f2],[(1.0, 2.0), (2.0, 3.5), (3.0, 6.5)])
+
+reta = minimos_quadrados([f1, f2], [(1.0, 2.0), (2.0, 3.5), (3.0, 6.5)])
 print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
 
 print('fim do programa')
