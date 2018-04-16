@@ -18,14 +18,19 @@ def resolve(matriz, vetor):
     return resp
 
 
-def minimos_quadrados(pontos):
-    """Retorna os parametros a e b da reta
-    que melhor se ajusta ao conjunto de pontos"""
+def minimos_quadrados(funcoes, pontos):
+    """Retorna os parametros b0 a bn que melhor ajusta
+    o conjunto de funções ao conjunto de pontos"""
 
     N = len(pontos)
-    P = [[1.0 for j in range(2)] for i in range(N)]
+    M = len(funcoes)
+    P = []
     for i in range(N):
-        P[i][1] = pontos[i][0]
+        x = pontos[i][0]
+        P.append([])
+        for j in range(M):
+            f = funcoes[j]
+            P[i].append(f(x))
     P = Matriz(P)
     Pt = P.transposta()
     A = Pt*P
@@ -35,7 +40,7 @@ def minimos_quadrados(pontos):
     C = Pt*y
 
     resp = resolve(A, C)
-    return (resp[0], resp[1])
+    return resp
 
 
 """ LU_ex = cria_matriz([[1, 2, 2],
@@ -75,8 +80,13 @@ A = cria_matriz([[1.0, 0.2, 0.0],
 
 (a, v) = A.Jacobi()
 print("\nAutovalor:\n"+str(a)+"Autovetor:\n"+str(v)) """
+def f1(x):
+    return 1
 
-(b, a) = minimos_quadrados([(1.0, 2.0), (2.0, 3.5), (3.0, 6.5)])
-print("y = "+str(b)+" + "+str(a)+"x")
+def f2(x):
+    return x
+
+reta = minimos_quadrados([f1,f2],[(1.0, 2.0), (2.0, 3.5), (3.0, 6.5)])
+print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
 
 print('fim do programa')
