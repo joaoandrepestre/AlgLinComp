@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from GeradorDeMatriz import cria_matriz
 from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
+from GeradorDeMatriz import cria_matriz
 
 
 def resolve(matriz, vetor):
@@ -43,14 +43,7 @@ def minimos_quadrados(funcoes, pontos):
     return resp
 
 
-""" LU_ex = cria_matriz([[1, 2, 2],
-                     [4, 4, 2],
-                     [4, 6, 4]])
-
-Cholesky_ex = cria_matriz([[5, -4, 1, 0],
-                           [-4, 6, -4, 1],
-                           [1, -4, 6, -4],
-                           [0, 1, -4, 5]])
+#Lista 1:
 
 A = cria_matriz([[16, 9, 8, 7, 6, 5, 4, 3, 2, 1],
                  [9, 17, 9, 8, 7, 6, 5, 4, 3, 2],
@@ -65,8 +58,11 @@ A = cria_matriz([[16, 9, 8, 7, 6, 5, 4, 3, 2, 1],
 
 B = [4, 0, 8, 0, 12, 0, 8, 0, 4, 0]
 
-(L, U) = A.Cholesky(True)
 print("A:\n"+str(A))
+print("B:\n"+str(B))
+
+print("LU:\n")
+(L, U) = A.LU(True)
 print("L:\n"+str(L))
 print("U:\n"+str(U))
 print("Prova Real:\n"+str(L*U))
@@ -74,13 +70,32 @@ y = L.substituicao_para_frente(B)
 x = U.retro_substituicao(y)
 print("Solução: " + str(x))
 
-A = cria_matriz([[1.0, 0.2, 0.0],
-                 [0.2, 1.0, 0.5],
-                 [0.0, 0.5, 1.0]])
+print("Cholesky:\n")
+(L,Lt) = A.Cholesky(True)
+print("L:\n"+str(L))
+print("Lt:\n"+str(U))
+print("Prova Real:\n"+str(L*U))
+y = L.substituicao_para_frente(B)
+x = Lt.retro_substituicao(y)
+print("Solução: " + str(x))
 
-(a, v) = A.Jacobi()
-print("\nAutovalor:\n"+str(a)+"Autovetor:\n"+str(v)) """
+#--------------------------------------------------
+#Lista 2:
 
+A = cria_matriz([[3.0, 2.0, 0.0],
+                 [2.0, 3.0, -1.0],
+                 [0.0, -1.0, 3.0]])
+
+print("Power Method:\n")
+(a, v) = A.metodo_de_potencias()
+print("\nMaior autovalor:\n"+str(a)+"\nAutovetor:\n"+str(v))
+
+print("Método de Jacobi:\n")
+(a,v) = A.Jacobi()
+print("Autovalores:\n"+str(a)+"Autovetores:\n"+str(v))
+
+#--------------------------------------------------
+#Lista 3:
 
 def f1(x):
     return 1
@@ -90,7 +105,9 @@ def f2(x):
     return x
 
 
-reta = minimos_quadrados([f1, f2], [(1.0, 2.0), (2.0, 3.5), (3.0, 6.5)])
+reta = minimos_quadrados(
+    [f1, f2], [(1.0, 1.0), (2.0, 2.5), (3.0, 3.5), (4.0, 4.3)])
 print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
 
+#--------------------------------------------------
 print('fim do programa')
