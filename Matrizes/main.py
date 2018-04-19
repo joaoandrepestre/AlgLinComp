@@ -43,7 +43,7 @@ def minimos_quadrados(funcoes, pontos):
     return resp
 
 
-#Lista 1:
+print("Lista 1:\n")
 
 A = cria_matriz([[16, 9, 8, 7, 6, 5, 4, 3, 2, 1],
                  [9, 17, 9, 8, 7, 6, 5, 4, 3, 2],
@@ -61,7 +61,7 @@ B = [4, 0, 8, 0, 12, 0, 8, 0, 4, 0]
 print("A:\n"+str(A))
 print("B:\n"+str(B))
 
-print("LU:\n")
+print("\nLU:\n")
 (L, U) = A.LU(True)
 print("L:\n"+str(L))
 print("U:\n"+str(U))
@@ -70,32 +70,35 @@ y = L.substituicao_para_frente(B)
 x = U.retro_substituicao(y)
 print("Solução: " + str(x))
 
-print("Cholesky:\n")
-(L,Lt) = A.Cholesky(True)
+print("\nCholesky:\n")
+(L, Lt) = A.Cholesky(True)
 print("L:\n"+str(L))
-print("Lt:\n"+str(U))
-print("Prova Real:\n"+str(L*U))
+print("Lt:\n"+str(Lt))
+print("Prova Real:\n"+str(L*Lt))
 y = L.substituicao_para_frente(B)
 x = Lt.retro_substituicao(y)
 print("Solução: " + str(x))
 
-#--------------------------------------------------
-#Lista 2:
+print("\n--------------------------------------------------\n")
+print("Lista 2:\n")
 
 A = cria_matriz([[3.0, 2.0, 0.0],
                  [2.0, 3.0, -1.0],
                  [0.0, -1.0, 3.0]])
 
-print("Power Method:\n")
+print("A:\n"+str(A))
+
+print("\nPower Method:\n")
 (a, v) = A.metodo_de_potencias()
-print("\nMaior autovalor:\n"+str(a)+"\nAutovetor:\n"+str(v))
+print("Maior autovalor:\n"+str(a)+"\n\nAutovetor:\n"+str(v))
 
-print("Método de Jacobi:\n")
-(a,v) = A.Jacobi()
-print("Autovalores:\n"+str(a)+"Autovetores:\n"+str(v))
+print("\nMétodo de Jacobi:\n")
+(a, v) = A.Jacobi()
+print("Autovalores:\n"+str(a)+"\nAutovetores:\n"+str(v))
 
-#--------------------------------------------------
-#Lista 3:
+print("\n--------------------------------------------------\n")
+print("Lista 3:\n")
+
 
 def f1(x):
     return 1
@@ -109,5 +112,5 @@ reta = minimos_quadrados(
     [f1, f2], [(1.0, 1.0), (2.0, 2.5), (3.0, 3.5), (4.0, 4.3)])
 print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
 
-#--------------------------------------------------
+print("\n--------------------------------------------------\n")
 print('fim do programa')
