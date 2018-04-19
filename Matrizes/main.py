@@ -3,7 +3,7 @@
 from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
 from GeradorDeMatriz import cria_matriz
-
+import os
 
 def resolve(matriz, vetor):
     """Resolve o sistema por decomposição LU"""
@@ -61,6 +61,10 @@ B = [4, 0, 8, 0, 12, 0, 8, 0, 4, 0]
 print("A:\n"+str(A))
 print("B:\n"+str(B))
 
+input()
+os.system('clear')
+
+
 print("\nLU:\n")
 (L, U) = A.LU(True)
 print("L:\n"+str(L))
@@ -69,6 +73,9 @@ print("Prova Real:\n"+str(L*U))
 y = L.substituicao_para_frente(B)
 x = U.retro_substituicao(y)
 print("Solução: " + str(x))
+
+input()
+os.system('clear')
 
 print("\nCholesky:\n")
 (L, Lt) = A.Cholesky(True)
@@ -80,6 +87,10 @@ x = Lt.retro_substituicao(y)
 print("Solução: " + str(x))
 
 print("\n--------------------------------------------------\n")
+
+input()
+os.system('clear')
+
 print("Lista 2:\n")
 
 A = cria_matriz([[3.0, 2.0, 0.0],
@@ -92,11 +103,19 @@ print("\nPower Method:\n")
 (a, v) = A.metodo_de_potencias()
 print("Maior autovalor:\n"+str(a)+"\n\nAutovetor:\n"+str(v))
 
+input()
+os.system('clear')
+
+
 print("\nMétodo de Jacobi:\n")
 (a, v) = A.Jacobi()
 print("Autovalores:\n"+str(a)+"\nAutovetores:\n"+str(v))
 
 print("\n--------------------------------------------------\n")
+
+input()
+os.system('clear')
+
 print("Lista 3:\n")
 
 
