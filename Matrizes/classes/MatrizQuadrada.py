@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import math
-from Matriz import Matriz
+from classes.Matriz import Matriz
 
 
 class MatrizQuadrada(Matriz):
@@ -181,7 +181,7 @@ class MatrizQuadrada(Matriz):
 
         (i, j) = A.maior_elemento_fora_diagonal(True)
         erro = A.mat[i][j]
-        while erro > 10**(-3):
+        while erro >= 10**(-3):
             aii = A.mat[i][i]
             ajj = A.mat[j][j]
             aij = A.mat[i][j]

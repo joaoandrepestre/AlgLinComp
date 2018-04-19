@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from Matriz import Matriz
-from MatrizQuadrada import MatrizQuadrada
-from GeradorDeMatriz import cria_matriz
+from classes.Matriz import Matriz
+from classes.MatrizQuadrada import MatrizQuadrada
+from classes.GeradorDeMatriz import cria_matriz
 import os
 
 def resolve(matriz, vetor):

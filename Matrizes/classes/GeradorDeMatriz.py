@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from Matriz import Matriz
-from MatrizQuadrada import MatrizQuadrada
+from classes.Matriz import Matriz
+from classes.MatrizQuadrada import MatrizQuadrada
 
 
 def e_quadrada(mat):
