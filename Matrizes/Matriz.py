@@ -27,7 +27,7 @@ class Matriz:
         resp = ""
         for i in range(self.lin):
             for j in range(self.col):
-                resp += str(self.mat[i][j])
+                resp += '{0:.3f}'.format(self.mat[i][j])
                 if j < self.lin-1:
                     resp += " "
             resp += "\n"
