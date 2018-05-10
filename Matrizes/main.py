@@ -5,6 +5,7 @@ from classes.MatrizQuadrada import MatrizQuadrada
 from classes.GeradorDeMatriz import cria_matriz
 import os
 
+
 def resolve(matriz, vetor):
     """Resolve o sistema por decomposição LU"""
 
@@ -43,36 +44,17 @@ def minimos_quadrados(funcoes, pontos):
     return resp
 
 
-print("Lista 1:\n")
+A = cria_matriz([[9, 5, 3, 1, 2, 1],
+                 [5, 10, 5, 3, 1, 2],
+                 [3, 5, 9, 5, 1, 2],
+                 [1, 3, 5, 6, 1, 2],
+                 [2, 1, 1, 1, 5, 3],
+                 [1, 2, 2, 2, 3, 4]])
 
-A = cria_matriz([[16, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-                 [9, 17, 9, 8, 7, 6, 5, 4, 3, 2],
-                 [8, 9, 18, 9, 8, 7, 6, 5, 4, 3],
-                 [7, 8, 9, 19, 9, 8, 7, 6, 5, 4],
-                 [6, 7, 8, 9, 18, 9, 8, 7, 6, 5],
-                 [5, 6, 7, 8, 9, 17, 9, 8, 7, 6],
-                 [4, 5, 6, 7, 8, 9, 16, 9, 8, 7],
-                 [3, 4, 5, 6, 7, 8, 9, 15, 9, 8],
-                 [2, 3, 4, 5, 6, 7, 8, 9, 14, 9],
-                 [1, 2, 3, 4, 5, 6, 7, 8, 9, 13]])
-
-B = [4, 0, 8, 0, 12, 0, 8, 0, 4, 0]
+B = [10, 20, 30, 40, 30, 10]
 
 print("A:\n"+str(A))
 print("B:\n"+str(B))
-
-input()
-os.system('clear')
-
-
-print("\nLU:\n")
-(L, U) = A.LU(True)
-print("L:\n"+str(L))
-print("U:\n"+str(U))
-print("Prova Real:\n"+str(L*U))
-y = L.substituicao_para_frente(B)
-x = U.retro_substituicao(y)
-print("Solução: " + str(x))
 
 input()
 os.system('clear')
@@ -86,18 +68,20 @@ y = L.substituicao_para_frente(B)
 x = Lt.retro_substituicao(y)
 print("Solução: " + str(x))
 
-print("\n--------------------------------------------------\n")
-
 input()
 os.system('clear')
 
-print("Lista 2:\n")
+print("\nLU:\n")
+(L, U) = A.LU(True)
+print("L:\n"+str(L))
+print("U:\n"+str(U))
+print("Prova Real:\n"+str(L*U))
+y = L.substituicao_para_frente(B)
+x = U.retro_substituicao(y)
+print("Solução: " + str(x))
 
-A = cria_matriz([[3.0, 2.0, 0.0],
-                 [2.0, 3.0, -1.0],
-                 [0.0, -1.0, 3.0]])
-
-print("A:\n"+str(A))
+input()
+os.system('clear')
 
 print("\nPower Method:\n")
 (a, v) = A.metodo_de_potencias()
@@ -111,12 +95,13 @@ print("\nMétodo de Jacobi:\n")
 (a, v) = A.Jacobi()
 print("Autovalores:\n"+str(a)+"\nAutovetores:\n"+str(v))
 
-print("\n--------------------------------------------------\n")
-
 input()
 os.system('clear')
 
-print("Lista 3:\n")
+print("Determinante: "+str(A.determinante_rigido()))
+
+input()
+os.system('clear')
 
 
 def f1(x):
@@ -128,8 +113,7 @@ def f2(x):
 
 
 reta = minimos_quadrados(
-    [f1, f2], [(1.0, 1.0), (2.0, 2.5), (3.0, 3.5), (4.0, 4.3)])
+    [f1, f2], [(-2.7, 3.0), (-1.0, 4.6), (0.0, 6.0), (1.0, 7.5), (1.6, 8.5), (3.1, 9.5)])
 print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
 
-print("\n--------------------------------------------------\n")
 print('fim do programa')
