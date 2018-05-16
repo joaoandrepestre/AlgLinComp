@@ -4,6 +4,7 @@ from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
 from GeradorDeMatriz import cria_matriz
 
+
 class Sistemas:
     """Conjunto de métodos para solução de sistemas não lineares"""
 
@@ -70,15 +71,26 @@ class Sistemas:
             for j in range(self.dim):
                 df = self.derivada_parcial(i, j)
                 ret[i].append(df(pontos))
-        
+
         return cria_matriz(ret)
 
-    def Newton(self):
-        """Retorna o vetor solução para o sistema"""
+    def Jacob_iterativo(self, B, Y, deltax):
+        """Recalcula a matriz Jacobiana."""
 
-        x0 = [j+2 for j in range(self.dim)]
+        bx = B*deltax
+        ybx = [Y[j]-bx[j] for j in range(self.dim)]
+        num = [[ybx[i]*deltax[j] for j in range(self.dim)] for i in range(self.dim)]
+        num = cria_matriz(num)
+        den = 1.0/sum([deltax[j]*deltax[j] for j in range(self.dim)])
+        return B + num*den
+
+    def Newton(self, x0):
+        """Retorna o vetor solução para o sistema."""
+
         for k in range(self.MAX):
             J = self.Jacobiano(x0)
+            J = J*(-1)
+            J = cria_matriz(J.mat)
             F = [self.funcoes[j](x0) for j in range(len(self.funcoes))]
             deltax = J.resolve(F)
             x1 = [x0[j]+deltax[j] for j in range(self.dim)]
@@ -89,15 +101,33 @@ class Sistemas:
 
         raise ValueError("Não converge.")
 
+    def Broyden(self, x0):
+        """Retorna o vetor solução para o sistema."""
+
+        B = self.Jacobiano(x0)
+        for k in range(self.MAX):
+            J = B*(-1)
+            J = cria_matriz(J.mat)
+            F0 = [self.funcoes[j](x0) for j in range(len(self.funcoes))]
+            deltax = J.resolve(F0)
+            x1 = [x0[j]+deltax[j] for j in range(self.dim)]
+            erro = self.norma(deltax)/self.norma(x1)
+            if(erro < self.TOL):
+                return x1
+            F1 = [self.funcoes[j](x1) for j in range(len(self.funcoes))]
+            Y = [F1[j]-F0[j] for j in range(self.dim)]
+            B = self.Jacob_iterativo(B,Y,deltax)
+            x0 = x1
+
+        raise ValueError("Não converge.")
 
 def f1(args):
     return args[0] + 2*args[1] - 2
 
-
 def f2(args):
     return args[0]*args[0] + 4*args[1]*args[1] - 4
 
-
 s = Sistemas([f1, f2], 2)
 
-print("Newton: "+str(s.Newton()))
+print("Newton: "+str(s.Newton([2,3])))
+print("Broyden: "+str(s.Broyden([2,3])))
