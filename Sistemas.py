@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
 from GeradorDeMatriz import cria_matriz
@@ -121,13 +122,45 @@ class Sistemas:
 
         raise ValueError("Não converge.")
 
+
+def ajuste_curvas(curva, x, y, params0):
+    """Retorna o vetor de parametros para a curva."""
+
+    f = [curva(x[i]) for i in range(len(x))]
+    s = Sistemas(f, len(params0))
+
+    for k in range(s.MAX):
+        J = s.Jacobiano(params0)
+        Jt = J.transposta()
+        A = Jt*J
+        A = cria_matriz(A.mat)
+        F = [f[j](params0)-y[j] for j in range(len(f))]
+        B = Jt*(-1)*F
+        deltaparams = A.resolve(B)
+        params1 = [params0[j]+deltaparams[j] for j in range(s.dim)]
+        erro = s.norma(deltaparams)/s.norma(params1)
+        if(erro < s.TOL):
+            return params1
+        params0 = params1
+
+    raise ValueError("Não converge.")
+
 def f1(args):
     return args[0] + 2*args[1] - 2
 
 def f2(args):
     return args[0]*args[0] + 4*args[1]*args[1] - 4
 
+def curva(ponto):
+
+    def f(params):
+
+        return math.exp((ponto**params[0])/params[1])
+
+    return f
+
 s = Sistemas([f1, f2], 2)
 
 print("Newton: "+str(s.Newton([2,3])))
 print("Broyden: "+str(s.Broyden([2,3])))
+print("Ajuste: "+str(ajuste_curvas(curva,[1,2,3],[1.995,1.410,1.260],[0,1])))
