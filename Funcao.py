@@ -199,7 +199,7 @@ class Funcao:
         """Resolve a EDO."""
 
         h = 0.1
-        num = int(1+ (tf-ti)/h)
+        num = int(1 + (tf-ti)/h)
         x = [0 for i in range(num)]
         x[0] = x0
         t = ti
@@ -215,7 +215,7 @@ class Funcao:
         """Resolve a EDO."""
 
         h = 0.1
-        num = int(1+ (tf-ti)/h)
+        num = int(1 + (tf-ti)/h)
         x = [0 for i in range(num)]
         x[0] = x0
         t = ti
@@ -229,11 +229,51 @@ class Funcao:
 
         return x
 
-def f(t,x):
-    return t+x
+    def Taylor(self, ti, tf, x0, dx0):
+        """Resolve a EDO de segunda ordem."""
+
+        h = 0.1
+        num = int(1 + (tf-ti)/h)
+        x = [0 for i in range(num)]
+        x[0] = x0
+        t = ti
+        dx = dx0
+        for i in range(1, num):
+            ddx = self.funcao(t,x[i-1],dx)
+            x[i] = x[i-1] + dx*h + ddx*h*h*0.5
+            dx = dx + ddx*h
+            t += h
+
+        return x
+
+    def Runge_Kutta_Nystrom(self, ti, tf, x0, dx0):
+        """Resolve a Edo de segunda ordem."""
+
+        h = 0.1
+        num = int(1 + (tf-ti)/h)
+        x = [0 for i in range(num)]
+        x[0] = x0
+        t = ti
+        dx = dx0
+        for i in range(1, num):
+            k1 = 0.5*h*self.funcao(t,x[i-1],dx)
+            q = 0.5*h*(dx + 0.5*k1)
+            k2 = 0.5*h*self.funcao(t+0.5*h,x[i-1]+q,dx+k1)
+            k3 = 0.5*h*self.funcao(t+0.5*h,x[i-1]+q,dx+k2)
+            l = h*(dx+k3)
+            k4 = 0.5*h*self.funcao(t+h,x[i-1]+l,dx+2*k3)
+            x[i] = x[i-1] + h*(dx + (k1+k2+k3)/3.0)
+            dx = dx + (k1 + 2*k2 + 2*k3 + k4)/3.0
+            t += h
+
+        return x
+
+def f(t,x,dx):
+    return -10 -1*dx*abs(dx)
 
 func = Funcao(f)
-print("Runge-Kutta 4: "+str(func.Runge_Kutta4(0,1,0.0)))
+print("Taylor: "+str(func.Taylor(0,1,0,0)))
+print("R.K.N.: "+str(func.Runge_Kutta_Nystrom(0,1,0,0)))
 #print("Integração Quadratura: "+str(func.integracao_quadratura(1,3,5)))
 
 
