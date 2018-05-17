@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import math
+from MatrizQuadrada import MatrizQuadrada
+from GeradorDeMatriz import cria_matriz
 
 
 class Funcao:
@@ -10,6 +12,67 @@ class Funcao:
     TOL = 10**(-10)
     MAX = 10**(4)
     H = 10**(-10)
+    Quad = {
+        2:{
+            "pontos": [-0.5773502691896257,0.5773502691896257],
+            "pesos": [1.0,1.0]
+        },
+
+        3:{
+            "pontos": [0.0,-0.7745966692414834,0.7745966692414834],
+            "pesos": [0.8888888888888888,0.5555555555555556,0.5555555555555556]
+        },
+
+        4:{
+            "pontos": [-0.3399810435848563,0.3399810435848563,-0.8611363115940526,0.8611363115940526],
+            "pesos": [0.6521451548625461,0.6521451548625461,0.3478548451374538,0.3478548451374538]
+        },
+
+        5:{
+            "pontos": [0.0,-0.5384693101056831,0.5384693101056831,-0.9061798459386640,0.9061798459386640],
+            "pesos": [0.5688888888888889,0.4786286704993665,0.4786286704993665,0.2369268850561891,0.2369268850561891]
+        },
+
+        6:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        7:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        8:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        9:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        10:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        11:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        12:{
+            "pontos": [],
+            "pesos": []
+        },
+
+        13:{
+            "pontos": [],
+            "pesos": []
+        }
+    }
 
     def __init__(self, f):
         self.funcao = f
@@ -90,8 +153,41 @@ class Funcao:
 
         raise ValueError("Não converge.")
 
+    def integracao_polinomial(self, a, b, num):
+        """Calcula a integral entre os pontos a e b com o numero de pontos determinado."""
+        d = float(abs(b-a))/(num-1)
+
+        pontos = [a+i*d for i in range(num)]
+        A = cria_matriz([[pontos[j]**i for j in range(num)] for i in range(num)])
+        C = [float(b**j-a**j)/j for j in range(1,num+1)]
+        pesos = A.resolve(C)
+
+        soma = 0
+        for i in range(num):
+            soma += self.funcao(pontos[i])*pesos[i]
+
+        return soma
+
+    def integracao_quadratura(self, a, b, num):
+        """Calcula a integral entre os pontos a e b com o numero de pontos determinado."""
+
+        pontos = self.Quad.get(num).get("pontos")
+        pesos = self.Quad.get(num).get("pesos")
+
+        soma = 0
+        for  i in range(num):
+            soma += self.funcao(0.5*(a+b+pontos[i]*abs(b-a)))*pesos[i]
+
+        return soma
+
 
 def f(x):
+    return 2+x+2*x**2
+
+func = Funcao(f)
+print("Integração Quadratura: "+str(func.integracao_quadratura(1,3,5)))
+
+""" def f(x):
     return x*x - 4*math.cos(x)
 
 
@@ -101,3 +197,4 @@ print("Bisseção: "+str(r.bissecao(0, 10)))
 print("Newton: "+str(r.Newton(10)))
 print("Secante: "+str(r.Newton_secante(10)))
 print("Interpolação: "+str(r.interpolacao_inversa([3.0, 5.0, 10.0])))
+ """

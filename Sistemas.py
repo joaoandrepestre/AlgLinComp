@@ -145,7 +145,7 @@ def ajuste_curvas(curva, x, y, params0):
 
     raise ValueError("Não converge.")
 
-def f1(args):
+""" def f1(args):
     return args[0] + 2*args[1] - 2
 
 def f2(args):
@@ -163,4 +163,4 @@ s = Sistemas([f1, f2], 2)
 
 print("Newton: "+str(s.Newton([2,3])))
 print("Broyden: "+str(s.Broyden([2,3])))
-print("Ajuste: "+str(ajuste_curvas(curva,[1,2,3],[1.995,1.410,1.260],[0,1])))
+print("Ajuste: "+str(ajuste_curvas(curva,[1,2,3],[1.995,1.410,1.260],[0,1]))) """

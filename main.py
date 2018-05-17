@@ -1,12 +1,56 @@
 # -*- coding: utf-8 -*-
 
-from Matriz import Matriz
+""" from Matriz import Matriz
 from MatrizQuadrada import MatrizQuadrada
-from GeradorDeMatriz import cria_matriz
-from Sistemas import Sistemas
+from GeradorDeMatriz import cria_matriz """
+import math
+from Funcao import Funcao
+from Sistemas import Sistemas, ajuste_curvas
 import os
 
-A = cria_matriz([[9, 5, 3, 1, 2, 1],
+def f(x):
+    return math.log(math.cosh(x*0.18286186)) -50
+
+func = Funcao(f)
+
+print("Bisseção: "+str(func.bissecao(0,1)))
+print("Newton: "+str(func.Newton(10)))
+print("Secante: "+str(func.Newton_secante(10)))
+#print("Interpolação: "+str(func.interpolacao_inversa([0,1,1.5])))
+
+def g(x):
+    return 4*math.cos(x)-math.exp(2*x)
+
+func = Funcao(g)
+
+print("Bisseção: "+str(func.bissecao(0,1)))
+print("Newton: "+str(func.Newton(10)))
+print("Secante: "+str(func.Newton_secante(10)))
+print("Interpolação: "+str(func.interpolacao_inversa([0,1,2])))
+
+def f1(args):
+    return 16*args[0]**4 + 16*args[1]**4 + args[2]**4 -16
+
+def f2(args):
+    return args[0]**2 + args[1]**2 + args[2]**2 -3
+
+def f3(args):
+    return args[0]**3 -args[1] +args[2] -1
+
+s = Sistemas([f1,f2,f3],3)
+
+print("Newton: "+str(s.Newton([1,2,3])))
+print("Broyden: "+str(s.Broyden([1,2,3])))
+
+def curva(ponto):
+    def f(params):
+        return params[0]+params[1]*ponto**(params[2])
+
+    return f
+
+print("Ajuste: "+str(ajuste_curvas(curva,[1,2,3],[1,2,9],[0,1,2])))
+
+""" A = cria_matriz([[9, 5, 3, 1, 2, 1],
                  [5, 10, 5, 3, 1, 2],
                  [3, 5, 9, 5, 1, 2],
                  [1, 3, 5, 6, 1, 2],
@@ -76,6 +120,6 @@ def f2(x):
 s = Sistemas([f1,f2],1)
 
 reta = s.minimos_quadrados([(-2.7, 3.0), (-1.0, 4.6), (0.0, 6.0), (1.0, 7.5), (1.6, 8.5), (3.1, 9.5)])
-print("y = "+str(reta[0])+" + "+str(reta[1])+"x")
+print("y = "+str(reta[0])+" + "+str(reta[1])+"x") """
 
 print('fim do programa')
