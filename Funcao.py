@@ -34,13 +34,13 @@ class Funcao:
         },
 
         6:{
-            "pontos": [],
-            "pesos": []
+            "pontos": [0.6612093864662645,-0.6612093864662645,-0.2386191860831969,0.2386191860831969,-0.9324695142031521,0.9324695142031521],
+            "pesos": [0.3607615730481386,0.3607615730481386,0.4679139345726910,0.4679139345726910,0.1713244923791704,0.1713244923791704]
         },
 
         7:{
-            "pontos": [],
-            "pesos": []
+            "pontos": [0.0,0.4058451513773972,-0.4058451513773972,-0.7415311855993945,0.7415311855993945,-0.9491079123427585,0.9491079123427585],
+            "pesos": [0.4179591836734694,0.3818300505051189,0.3818300505051189,0.2797053914892766,0.2797053914892766,0.1294849661688697,0.1294849661688697]
         },
 
         8:{
@@ -180,12 +180,62 @@ class Funcao:
 
         return soma
 
+    def Euler(self, ti, tf, x0):
+        """Resolve a EDO."""
 
-def f(x):
-    return 2+x+2*x**2
+        h = 0.1
+        num = int(1 + (tf-ti)/h)
+        x = [0 for i in range(num)]
+        x[0] = x0
+        t = ti
+        for i in range(1,num):
+            k = self.funcao(t,x[i-1])
+            x[i] = x[i-1] + k*h
+            t += h
+
+        return x
+
+    def Runge_Kutta2(self, ti, tf, x0):
+        """Resolve a EDO."""
+
+        h = 0.1
+        num = int(1+ (tf-ti)/h)
+        x = [0 for i in range(num)]
+        x[0] = x0
+        t = ti
+        for i in range(1,num):
+            k1 = self.funcao(t,x[i-1])
+            k2 = self.funcao(t+h,x[i-1]+h*k1)
+            x[i] = x[i-1] + 0.5*h*(k1+k2)
+            t += h
+
+        return x
+
+    def Runge_Kutta4(self, ti, tf, x0):
+        """Resolve a EDO."""
+
+        h = 0.1
+        num = int(1+ (tf-ti)/h)
+        x = [0 for i in range(num)]
+        x[0] = x0
+        t = ti
+        for i in range(1,num):
+            k1 = self.funcao(t,x[i-1])
+            k2 = self.funcao(t+0.5*h,x[i-1]+0.5*h*k1)
+            k3 = self.funcao(t+0.5*h,x[i-1]+0.5*h*k2)
+            k4 = self.funcao(t+h,x[i-1]+h*k3)
+            x[i] = x[i-1] + h*(k1+2*k2+2*k3+k4)/6.0
+            t += h
+
+        return x
+
+def f(t,x):
+    return t+x
 
 func = Funcao(f)
-print("Integração Quadratura: "+str(func.integracao_quadratura(1,3,5)))
+print("Runge-Kutta 4: "+str(func.Runge_Kutta4(0,1,0.0)))
+#print("Integração Quadratura: "+str(func.integracao_quadratura(1,3,5)))
+
 
 """ def f(x):
     return x*x - 4*math.cos(x)
