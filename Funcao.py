@@ -267,24 +267,3 @@ class Funcao:
             t += h
 
         return x
-
-def f(t,x,dx):
-    return -10 -1*dx*abs(dx)
-
-func = Funcao(f)
-print("Taylor: "+str(func.Taylor(0,1,0,0)))
-print("R.K.N.: "+str(func.Runge_Kutta_Nystrom(0,1,0,0)))
-#print("Integração Quadratura: "+str(func.integracao_quadratura(1,3,5)))
-
-
-""" def f(x):
-    return x*x - 4*math.cos(x)
-
-
-r = Funcao(f)
-
-print("Bisseção: "+str(r.bissecao(0, 10)))
-print("Newton: "+str(r.Newton(10)))
-print("Secante: "+str(r.Newton_secante(10)))
-print("Interpolação: "+str(r.interpolacao_inversa([3.0, 5.0, 10.0])))
- """
