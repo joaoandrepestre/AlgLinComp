@@ -75,7 +75,7 @@ sb = Sistemas([g1,g2(0.75),g3(6.5)],3)
 sc = Sistemas([g1,g2(0),g3(11.667)],3)
 
 na = sa.Newton([1,2,3])
-ba = sa.Broyden([1,2,3])
+ba = sa.Broyden([1,0,0])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -83,13 +83,13 @@ print("""Sistema:\n
          60c3**4 + 60(c3**2)*c2**2 + 576(c3**2)*c2*c4 + 2232(c3**2)*c4**2 + 252(c4**2)*c2**2 + 1296(c4**3)*c2 +
          + 3348c4**4 + 24(c2**3)*c4 + 3c2 = 3\n""")
 print("Newton: c2 = "+str(na[0])+" c3 = "+str(na[1])+" c4 = "+str(na[2]))
-#print("Broyden: c2 = "+str(ba[0])+" c3 = "+str(ba[1])+" c4 = "+str(ba[2]))
+print("Broyden: c2 = "+str(ba[0])+" c3 = "+str(ba[1])+" c4 = "+str(ba[2]))
 
 input()
 os.system('clear')
 
 nb = sa.Newton([1,2,3])
-bb = sa.Broyden([1,2,3])
+bb = sa.Broyden([1,0,0])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -97,13 +97,13 @@ print("""Sistema:\n
          60c3**4 + 60(c3**2)*c2**2 + 576(c3**2)*c2*c4 + 2232(c3**2)*c4**2 + 252(c4**2)*c2**2 + 1296(c4**3)*c2 +
          + 3348c4**4 + 24(c2**3)*c4 + 3c2 = 6.5\n""")
 print("Newton: c2 = "+str(nb[0])+" c3 = "+str(nb[1])+" c4 = "+str(nb[2]))
-#print("Broyden: c2 = "+str(bb[0])+" c3 = "+str(bb[1])+" c4 = "+str(bb[2]))
+print("Broyden: c2 = "+str(bb[0])+" c3 = "+str(bb[1])+" c4 = "+str(bb[2]))
 
 input()
 os.system('clear')
 
 nc = sa.Newton([1,2,3])
-bc = sa.Broyden([1,2,3])
+bc = sa.Broyden([1,0,0])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -111,7 +111,7 @@ print("""Sistema:\n
          60c3**4 + 60(c3**2)*c2**2 + 576(c3**2)*c2*c4 + 2232(c3**2)*c4**2 + 252(c4**2)*c2**2 + 1296(c4**3)*c2 +
          + 3348c4**4 + 24(c2**3)*c4 + 3c2 = 11.667\n""")
 print("Newton: c2 = "+str(nc[0])+" c3 = "+str(nc[1])+" c4 = "+str(nc[2]))
-#print("Broyden: c2 = "+str(bc[0])+" c3 = "+str(bc[1])+" c4 = "+str(bc[2]))
+print("Broyden: c2 = "+str(bc[0])+" c3 = "+str(bc[1])+" c4 = "+str(bc[2]))
 
 input()
 os.system('clear')
@@ -129,8 +129,8 @@ print("Ajuste: f(x) = "+str(params[0])+" + "+str(params[1])+"*x**"+str(params[2]
 def ajustada(x):
     return params[0]+params[1]*x**params[2]
 
-x = [0.1*i for i in range(10)]
-y = [ajustada(x[i]) for i in range(10)]
+x = [0.1*i for i in range(-10,10)]
+y = [ajustada(x[i]) for i in range(20)]
 plt.plot(x,y,'ro')
 plt.ylabel('Curva Ajustada')
 plt.show()
