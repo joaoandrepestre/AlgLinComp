@@ -113,7 +113,7 @@ class Funcao:
                 return x1
             x0 = x1
 
-        raise ValueError("Não converge.")
+        print("Não converge.")
 
     def Newton_secante(self, x0):
         """Encontra uma raiz da função f."""
@@ -130,7 +130,7 @@ class Funcao:
             x1 = x2
             y0 = y1
 
-        raise ValueError("Não converge.")
+        print("Não converge.")
 
     def interpolacao_inversa(self, pontos):
         """Econtra uma raiz de f."""
@@ -151,7 +151,7 @@ class Funcao:
             sorted(pontos)
             x0 = x
 
-        raise ValueError("Não converge.")
+        print("Não converge.")
 
     def integracao_polinomial(self, a, b, num):
         """Calcula a integral entre os pontos a e b com o numero de pontos determinado."""

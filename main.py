@@ -12,10 +12,10 @@ def f(x):
 func = Funcao(f)
 
 print("f(x) = log(cosh(x*sqrt(gk))) - 50\n")
-print("Bisseção: x = "+str(func.bissecao(0,1)))
-print("Newton: x = "+str(func.Newton(10)))
-print("Secante: x = "+str(func.Newton_secante(10)))
-#print("Interpolação: "+str(func.interpolacao_inversa([0,1,1.5])))
+print("Bisseção: x = "+str(func.bissecao(640,650)))
+print("Newton: x = "+str(func.Newton(640)))
+print("Secante: x = "+str(func.Newton_secante(640)))
+print("Interpolação: x = "+str(func.interpolacao_inversa([640,645,650])))
 
 input()
 os.system('clear')
@@ -26,7 +26,7 @@ def g(x):
 func = Funcao(g)
 
 print("f(x) = 4cos(x) - e**(2x)\n")
-print("Bisseção: x = "+str(func.bissecao(0,1)))
+print("Bisseção: x = "+str(func.bissecao(-1,1)))
 print("Newton: x = "+str(func.Newton(10)))
 print("Secante: x = "+str(func.Newton_secante(10)))
 print("Interpolação: x = "+str(func.interpolacao_inversa([0,1,2])))
@@ -75,7 +75,7 @@ sb = Sistemas([g1,g2(0.75),g3(6.5)],3)
 sc = Sistemas([g1,g2(0),g3(11.667)],3)
 
 na = sa.Newton([1,2,3])
-#ba = sa.Broyden([0,1,2])
+ba = sa.Broyden([1,2,3])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -89,7 +89,7 @@ input()
 os.system('clear')
 
 nb = sa.Newton([1,2,3])
-#bb = sa.Broyden([1,2,3])
+bb = sa.Broyden([1,2,3])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -103,7 +103,7 @@ input()
 os.system('clear')
 
 nc = sa.Newton([1,2,3])
-#bc = sa.Broyden([1,2,3])
+bc = sa.Broyden([1,2,3])
 
 print("""Sistema:\n
          2c3 + c2**2 + 6c4**2 = 1
@@ -125,6 +125,15 @@ def curva(ponto):
 params = ajuste_curvas(curva,[1,2,3],[1,2,9],[0,1,2])
 print("x:\t1\t2\t3\ny:\t1\t2\t9\n")
 print("Ajuste: f(x) = "+str(params[0])+" + "+str(params[1])+"*x**"+str(params[2]))
+
+def ajustada(x):
+    return params[0]+params[1]*x**params[2]
+
+x = [0.1*i for i in range(10)]
+y = [ajustada(x[i]) for i in range(10)]
+plt.plot(x,y,'ro')
+plt.ylabel('Curva Ajustada')
+plt.show()
 
 input()
 os.system('clear')

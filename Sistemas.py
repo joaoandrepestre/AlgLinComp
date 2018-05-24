@@ -100,7 +100,7 @@ class Sistemas:
                 return x1
             x0 = x1
 
-        raise ValueError("Não converge.")
+        print("Não converge.")
 
     def Broyden(self, x0):
         """Retorna o vetor solução para o sistema."""
@@ -120,7 +120,7 @@ class Sistemas:
             B = self.Jacob_iterativo(B,Y,deltax)
             x0 = x1
 
-        raise ValueError("Não converge.")
+        print("Não converge.")
 
 
 def ajuste_curvas(curva, x, y, params0):
@@ -143,4 +143,4 @@ def ajuste_curvas(curva, x, y, params0):
             return params1
         params0 = params1
 
-    raise ValueError("Não converge.")
+    print("Não converge.")
